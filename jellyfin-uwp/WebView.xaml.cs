@@ -26,5 +26,10 @@ namespace jellyfin_uwp
 
             JellyfinWebView.Navigate(new Uri(MainPage.globalSettingsStore.AppURL));
         }
+
+        private void ChangeURL_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.jfFrame.Navigate(typeof(AppSettings));
+        }
     }
 }
