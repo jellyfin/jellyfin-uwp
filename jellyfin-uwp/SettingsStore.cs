@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Windows.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,22 @@ namespace jellyfin_uwp
     public class SettingsStore
     {
 
-        public string AppURL = "";
+        private ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
-        public bool AppURLValid = false;
-        public bool AppURLIsJellyfin = false;
+        public string AppURL {
+            get => (string)(_localSettings.Values["settings.app.AppURL"] ?? string.Empty);
+            set => _localSettings.Values["settings.app.AppURL"] = value;
+        }
+
+        public bool AppURLValid {
+            get => (bool)(_localSettings.Values["settings.app.AppURLValid"] ?? false);
+            set => _localSettings.Values["settings.app.AppURLValid"] = value;
+        }
+
+        public bool AppURLIsJellyfin {
+            get => (bool)(_localSettings.Values["settings.app.AppURLIsJellyfin"] ?? false);
+            set => _localSettings.Values["settings.app.AppURLIsJellyfin"] = value;
+        }
 
     }
 }
