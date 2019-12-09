@@ -9,7 +9,7 @@
   <Identity
     Name="Jellyfin.UWP.Client"
     Publisher="CN=chaosinnovator"
-    Version="0.1.0.0" />
+    Version="0.1.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="512c96fc-04e9-4046-9046-df4f914acc8d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
