@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="jellyfin_uwp.MainPage"
+    x:Class="jellyfin_uwp.WebView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:jellyfin_uwp"
@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Frame x:Name="JellyfinFrame"></Frame>
+        <WebView x:Name="JellyfinWebView"></WebView>
     </Grid>
 </Page>
