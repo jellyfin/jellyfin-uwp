@@ -20,16 +20,16 @@ namespace jellyfin_uwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public static MainPage mainPageReference;
+        public static Frame jfFrame;
         public static SettingsStore globalSettingsStore;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            mainPageReference = this;
-
             globalSettingsStore = new SettingsStore();
+
+            jfFrame = JellyfinFrame;
 
             if (!globalSettingsStore.AppURLValid)
             {

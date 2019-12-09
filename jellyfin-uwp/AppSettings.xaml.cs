@@ -36,7 +36,7 @@ namespace jellyfin_uwp
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
         {
-            MainPage.mainPageReference.Frame.Navigate(typeof(WebView));
+            MainPage.jfFrame.Navigate(typeof(WebView));
         }
     }
 }
