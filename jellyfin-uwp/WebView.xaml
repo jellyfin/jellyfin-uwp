@@ -9,6 +9,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <WebView x:Name="JellyfinWebView"></WebView>
+        <WebView x:Name="JellyfinWebView">
+            <WebView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Change URL" Click="ChangeURL_Click" />
+                </MenuFlyout>
+            </WebView.ContextFlyout>
+        </WebView>
     </Grid>
 </Page>
