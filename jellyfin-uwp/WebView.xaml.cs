@@ -15,8 +15,14 @@ namespace jellyfin_uwp
             this.InitializeComponent();
 
             JellyfinWebView.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+            JellyfinWebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
 
             JellyfinWebView.Navigate(new Uri(MainPage.globalSettingsStore.AppURL));
+        }
+
+        private async void JellyfinWebView_NavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationCompletedEventArgs args)
+        {
+            await JellyfinWebView.InvokeScriptAsync("eval", new string[] { "navigator.gamepadInputEmulation = 'mouse';" });
         }
 
         private void JellyfinWebView_ContainsFullScreenElementChanged(Windows.UI.Xaml.Controls.WebView sender, object args)
