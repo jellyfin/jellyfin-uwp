@@ -19,6 +19,9 @@ namespace jellyfin_uwp
         public App()
         {
             this.InitializeComponent();
+
+            this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+
             this.Suspending += OnSuspending;
         }
 
