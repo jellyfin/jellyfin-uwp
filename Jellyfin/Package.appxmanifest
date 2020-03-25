@@ -9,7 +9,7 @@
   <Identity
     Name="53468VillagraLabs.jellyfin-test"
     Publisher="CN=5A691C3E-3A46-4595-98F1-B3A730766E47"
-    Version="1.0.4.0" />
+    Version="1.0.5.0" />
 
   <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72db" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
