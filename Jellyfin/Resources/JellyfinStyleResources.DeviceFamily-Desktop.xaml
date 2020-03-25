@@ -6,6 +6,7 @@
     <SolidColorBrush x:Key="Color0" Color="#101010" />
     <SolidColorBrush x:Key="Color10" Color="#202020" />
     <SolidColorBrush x:Key="Color20" Color="#303030" />
+    <SolidColorBrush x:Key="Color80" Color="#828282" />
     <SolidColorBrush x:Key="Color90" Color="#a9a9a9" />
     <SolidColorBrush x:Key="Color100" Color="#FFFFFF" />
     <SolidColorBrush x:Key="PrimaryColor" Color="#00A4DC" />
@@ -16,7 +17,7 @@
     <x:Double x:Key="FontL">20</x:Double>
 
 
-    <FontFamily x:Key="Quicksand">/Fonts/Quicksand-Regular.ttf#Quicksand</FontFamily>
+    <FontFamily x:Key="JellyfinFamilyFont">/Fonts/NotoSans-Regular.ttf#Noto Sans</FontFamily>
 
     <!-- Default style for Windows.UI.Xaml.Controls.Button -->
     <Style x:Key="PrimaryButton" TargetType="Button">
@@ -27,7 +28,7 @@
         <Setter Property="Padding" Value="8,4,8,4" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontFamily" Value="{StaticResource Quicksand}" />
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="{StaticResource FontM}" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
@@ -71,13 +72,10 @@
 
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Color20}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Color80}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -108,7 +106,7 @@
         <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}" />
         <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}" />
         <Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}" />
-        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}" />
         <Setter Property="FontSize" Value="{StaticResource FontM}" />
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
