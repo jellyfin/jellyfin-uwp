@@ -1,12 +1,24 @@
-﻿using System;
+﻿using Jellyfin.Utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace jellyfin_uwp
+namespace Jellyfin
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -21,7 +33,7 @@ namespace jellyfin_uwp
         {
             this.InitializeComponent();
 
-            this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            App.Current.RequiresPointerMode = Windows.UI.Xaml.ApplicationRequiresPointerMode.WhenRequested;
 
             this.Suspending += OnSuspending;
         }
@@ -41,8 +53,21 @@ namespace jellyfin_uwp
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
+
+                if (AppUtils.IsXbox)
+                {
+                    ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                    ApplicationViewScaling.TrySetDisableLayoutScaling(true);
+                }
+                else
+                {
+                    ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                    formattableTitleBar.ButtonBackgroundColor = Color.FromArgb(255, 32, 32, 32);
+                    formattableTitleBar.ButtonForegroundColor = Color.FromArgb(255, 160, 160, 160);
+                    formattableTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                    formattableTitleBar.BackgroundColor = Color.FromArgb(255, 32, 32, 32);
+                }
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -60,13 +85,19 @@ namespace jellyfin_uwp
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    if (Core.Central.Settings.HasJellyfinServer)
+                    {
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(Views.OnBoarding), e.Arguments);
+                    }
+                    
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-
-            ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
         }
 
         /// <summary>

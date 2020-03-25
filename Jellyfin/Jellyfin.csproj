@@ -7,8 +7,8 @@
     <ProjectGuid>{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jellyfin_uwp</RootNamespace>
-    <AssemblyName>jellyfin-uwp</AssemblyName>
+    <RootNamespace>Jellyfin</RootNamespace>
+    <AssemblyName>Jellyfin</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -18,8 +18,8 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>B9F3E4421FA515F85105247939F6C2E9AFEA8FA1</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile />
+    <PackageCertificateThumbprint>35D45F91095F5FFCCF82B306E49BEA749E5CF4B7</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>Jellyfin_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -128,16 +128,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AppSettings.xaml.cs">
-      <DependentUpon>AppSettings.xaml</DependentUpon>
+    <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
+    <Compile Include="Controls\JellyfinWebView.xaml.cs">
+      <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Central.cs" />
+    <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsStore.cs" />
-    <Compile Include="WebView.xaml.cs">
-      <DependentUpon>WebView.xaml</DependentUpon>
+    <Compile Include="Utils\AppUtils.cs" />
+    <Compile Include="Utils\DeviceFormFactorType.cs" />
+    <Compile Include="Views\OnBoarding.xaml.cs">
+      <DependentUpon>OnBoarding.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +195,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -203,21 +208,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AppSettings.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\JellyfinWebView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="JellyfinStyleResources.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WebView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Resources\JellyfinStyleResources.DeviceFamily-Desktop.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\JellyfinStyleResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OnBoarding.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -226,7 +235,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="jellyfin-uwp_TemporaryKey.pfx" />
+    <Content Include="Fonts\Quicksand-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Jellyfin_TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

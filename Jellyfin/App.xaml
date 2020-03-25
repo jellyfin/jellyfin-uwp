@@ -1,14 +1,13 @@
 ﻿<Application
-    x:Class="jellyfin_uwp.App"
+    x:Class="Jellyfin.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:jellyfin_uwp"
-    RequestedTheme="Dark">
+    xmlns:local="using:Jellyfin">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="JellyfinStyleResources.xaml"/>
+                <ResourceDictionary Source="Resources/JellyfinStyleResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
