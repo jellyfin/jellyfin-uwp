@@ -1,0 +1,43 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+  tags:
+    include:
+    - '*'
+
+pr:
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: Build
+  displayName: 'Build'
+
+  strategy:
+    matrix:
+      Release:
+        BuildConfiguration: Release
+      Debug:
+        BuildConfiguration: Debug
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Update DotNet'
+    inputs:
+      packageType: sdk
+      version: '3.1.100'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish Server'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: 'Jellyfin/Jellyfin.csproj'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: false
