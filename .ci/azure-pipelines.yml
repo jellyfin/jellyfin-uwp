@@ -1,43 +1,36 @@
+# Universal Windows Platform
+# Build a Universal Windows Platform project using Visual Studio.
+# Add steps that test and distribute an app, save build artifacts, and more:
+# https://aka.ms/yaml
+
 trigger:
-  batch: true
-  branches:
-    include:
-    - '*'
-  tags:
-    include:
-    - '*'
+- master
 
-pr:
-  branches:
-    include:
-    - '*'
+pool:
+  vmImage: 'windows-latest'
 
-jobs:
-- job: Build
-  displayName: 'Build'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x86|x64|ARM|ARM64'
+  buildConfiguration: 'Release'
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
-  strategy:
-    matrix:
-      Release:
-        BuildConfiguration: Release
-      Debug:
-        BuildConfiguration: Debug
+steps:
+- task: NuGetToolInstaller@1
 
-  pool:
-    vmImage: 'ubuntu-latest'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Update DotNet'
-    inputs:
-      packageType: sdk
-      version: '3.1.100'
+- task: VSBuild@1
+  inputs:
+    platform: 'x86'
+    solution: '$(solution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Publish Server'
-    inputs:
-      command: publish
-      publishWebProjects: false
-      projects: 'Jellyfin/Jellyfin.csproj'
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      zipAfterPublish: false
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
