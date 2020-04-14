@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="53468VillagraLabs.jellyfin-test"
-    Publisher="CN=5A691C3E-3A46-4595-98F1-B3A730766E47"
-    Version="1.0.5.0" />
+    Name="20468Jellyfin.Jellyfin"
+    Publisher="CN=3D3639CB-31B4-4125-B529-F73741781F84"
+    Version="1.1.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72db" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72ea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>jellyfin-test</DisplayName>
-    <PublisherDisplayName>Villagra Labs</PublisherDisplayName>
+    <DisplayName>Jellyfin</DisplayName>
+    <PublisherDisplayName>Jellyfin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="Jellyfin.App">
       <uap:VisualElements
-        DisplayName="jellyfin-test"
+        DisplayName="Jellyfin"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="Jellyfin"
