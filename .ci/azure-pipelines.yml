@@ -12,32 +12,30 @@ pr:
     include:
     - '*'
 
-jobs:
-- job: Build
-  displayName: 'Build'
+pool:
+  vmImage: 'windows-latest'
 
-  strategy:
-    matrix:
-      Release:
-        BuildConfiguration: Release
-      Debug:
-        BuildConfiguration: Debug
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x86|x64|ARM|ARM64'
+  buildConfiguration: 'Release'
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
-  pool:
-    vmImage: 'ubuntu-latest'
+steps:
+- task: NuGetToolInstaller@1
 
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Update DotNet'
-    inputs:
-      packageType: sdk
-      version: '3.1.100'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Publish Server'
-    inputs:
-      command: publish
-      publishWebProjects: false
-      projects: 'Jellyfin/Jellyfin.csproj'
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      zipAfterPublish: false
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'jellyfin-uwp'
+    publishLocation: 'Container'
