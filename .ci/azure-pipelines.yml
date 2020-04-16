@@ -74,14 +74,14 @@ jobs:
     inputs:
       targetType: 'inline'
       script: 'mv *.appxupload jellyfin-uwp-${TAG}.appxupload'
-      workingDirectory: '$(System.ArtifactsDirectory)'
+      workingDirectory: '$(System.ArtifactsDirectory)/AppxPackages'
 
   - task: GithubRelease@0
     displayName: 'GitHub Upload'
     inputs:
       gitHubConnection: Jellyfin Release Download
       repositoryName: jellyfin/jellyfin-uwp
-      assets: '$(System.ArtifactsDirectory)/*.appxupload'
+      assets: '$(System.ArtifactsDirectory)/**/*.appxupload'
       action: 'edit'
       assetUploadMode: 'replace'
       tag: '$(TAG)'
@@ -91,7 +91,7 @@ jobs:
     inputs:
       sshEndpoint: repository
       sourceFolder: '$(System.ArtifactsDirectory)'
-      contents: '*.appxupload'
+      contents: '**/*.appxupload'
       targetFolder: '/srv/repository/releases/client/uwp/versions/$(TAG)'
 
   - task: SSH@0
