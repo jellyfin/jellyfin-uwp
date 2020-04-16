@@ -12,34 +12,91 @@ pr:
     include:
     - '*'
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   Solution: '**/*.sln'
   BuildPlatform: 'x86|x64|ARM|ARM64'
   BuildConfiguration: 'Release'
   AppxDirectory: '$(Build.ArtifactStagingDirectory)/AppxPackages'
 
-steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Install Nuget'
+jobs:
+- job: Build
+  displayName: 'Build'
 
-- task: NuGetCommand@2
-  displayName: 'Restore Dependencies'
-  inputs:
-    restoreSolution: '$(Solution)'
+  pool:
+    vmImage: 'windows-latest'
 
-- task: VSBuild@1
-  displayName: 'Build Client'
-  inputs:
-    solution: '$(Solution)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(BuildPlatform)" /p:AppxPackageDir="$(AppxDirectory)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+  steps:
+  - task: NuGetToolInstaller@1
+    displayName: 'Install Nuget'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Client'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'jellyfin-uwp'
-    publishLocation: 'Container'
+  - task: NuGetCommand@2
+    displayName: 'Restore Dependencies'
+    inputs:
+      restoreSolution: '$(Solution)'
+
+  - task: VSBuild@1
+    displayName: 'Build Client'
+    inputs:
+      solution: '$(Solution)'
+      configuration: '$(BuildConfiguration)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(BuildPlatform)" /p:AppxPackageDir="$(AppxDirectory)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Client'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'jellyfin-uwp'
+      publishLocation: 'Container'
+
+- job: Publish
+  displayName: 'Publish'
+
+  dependsOn: Build
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags')
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - script: 'echo "##vso[task.setvariable variable=TAG]$(git describe --tags)"'
+    displayName: 'Set Tag Variable'
+
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Binary'
+    inputs:
+      source: 'current'
+      artifact: 'jellyfin-uwp'
+      path: '$(System.ArtifactsDirectory)'
+      runVersion: 'latest'
+
+  - task: Bash@3
+    displayName: 'Rename Binary'
+    inputs:
+      targetType: 'inline'
+      script: 'mv *.appxupload jellyfin-uwp-${TAG}.appxupload'
+      workingDirectory: '$(System.ArtifactsDirectory)'
+
+  - task: GithubRelease@0
+    displayName: 'GitHub Upload'
+    inputs:
+      gitHubConnection: Jellyfin Release Download
+      repositoryName: jellyfin/jellyfin-uwp
+      assets: '$(System.ArtifactsDirectory)/*.appxupload'
+      action: 'edit'
+      assetUploadMode: 'replace'
+      tag: '$(TAG)'
+
+  - task: CopyFilesOverSSH@0
+    displayName: 'SSH Upload'
+    inputs:
+      sshEndpoint: repository
+      sourceFolder: '$(System.ArtifactsDirectory)'
+      contents: '*.appxupload'
+      targetFolder: '/srv/repository/releases/client/uwp/versions/$(TAG)'
+
+  - task: SSH@0
+    displayName: 'SSH Symlink'
+    inputs:
+      sshEndpoint: repository
+      runOptions: 'inline'
+      inline: 'cd /srv/repository/releases/client/uwp && ln -s versions/$(TAG)/jellyfin-uwp-$(TAG).appxupload .'
