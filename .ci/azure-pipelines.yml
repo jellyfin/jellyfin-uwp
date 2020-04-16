@@ -16,25 +16,29 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'x86|x64|ARM|ARM64'
-  buildConfiguration: 'Release'
-  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+  Solution: '**/*.sln'
+  BuildPlatform: 'x86|x64|ARM|ARM64'
+  BuildConfiguration: 'Release'
+  AppxDirectory: '$(Build.ArtifactStagingDirectory)/AppxPackages'
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: 'Install Nuget'
 
 - task: NuGetCommand@2
+  displayName: 'Restore Dependencies'
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '$(Solution)'
 
 - task: VSBuild@1
+  displayName: 'Build Client'
   inputs:
-    solution: '$(solution)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    solution: '$(Solution)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(BuildPlatform)" /p:AppxPackageDir="$(AppxDirectory)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Client'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'jellyfin-uwp'
