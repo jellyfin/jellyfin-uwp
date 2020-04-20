@@ -93,10 +93,11 @@ jobs:
       sourceFolder: '$(System.ArtifactsDirectory)'
       contents: '**/*.appxupload'
       targetFolder: '/srv/repository/releases/client/uwp/versions/$(TAG)'
+      flattenFolders: true
 
   - task: SSH@0
     displayName: 'SSH Symlink'
     inputs:
       sshEndpoint: repository
       runOptions: 'inline'
-      inline: 'cd /srv/repository/releases/client/uwp && ln -s versions/$(TAG)/jellyfin-uwp-$(TAG).appxupload .'
+      inline: 'cd /srv/repository/releases/client/uwp && rm -rf *.appxupload && ln -s versions/$(TAG)/jellyfin-uwp-$(TAG).appxupload .'
