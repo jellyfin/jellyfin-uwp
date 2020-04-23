@@ -1,6 +1,6 @@
 namespace Jellyfin.ViewModels
 {
-    public abstract class MainViewModel
+    public class MainViewModel
     {
     }
 }
