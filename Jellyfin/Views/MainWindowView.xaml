@@ -1,17 +1,19 @@
 ﻿<Page
-    x:Class="Jellyfin.Views.MovieDetailView"
+    x:Class="Jellyfin.Views.MainWindowView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:views="using:Jellyfin.Views"
     mc:Ignorable="d"
-    Background="GreenYellow">
-    <Page.DataContext>
-        <viewModels:MainViewModel />
-    </Page.DataContext>
+    DataContext="{Binding MainPage, Source={StaticResource ViewModelLocator}}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid>
-        <TextBlock Text="lolz" FontSize="{StaticResource FontL}" Foreground="White" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <views:MenuView Grid.Column="0" />
+        <views:MovieView Grid.Column="1" />
     </Grid>
 </Page>

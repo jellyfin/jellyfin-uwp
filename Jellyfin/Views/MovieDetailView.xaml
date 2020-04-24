@@ -1,22 +1,56 @@
 ﻿<Page
-    x:Class="Jellyfin.Views.MainWindowView"
+    x:Class="Jellyfin.Views.MovieDetailView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
-    xmlns:views="using:Jellyfin.Views"
+    xmlns:uwp="using:FontAwesome.UWP"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.DataContext>
-        <viewModels:MainViewModel />
-    </Page.DataContext>
-    <Grid>
+    PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
+    DataContext="{Binding MovieDetailPage, Source={StaticResource ViewModelLocator}}"
+    d:DataContext="{d:DesignInstance viewModels:MovieDetailViewModel}">
+    <Page.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="#FF552f56" Offset="0"/>
+            <GradientStop Color="#FF1f4f5f" Offset="1"/>
+        </LinearGradientBrush>
+    </Page.Background>
+    <Grid Margin="15, 150, 15, 15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <views:MenuView Grid.Column="0" />
-        <views:MovieView Grid.Column="1" />
+
+        <Image Grid.Column="0" Source="{Binding SelectedMovie.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top" />
+        
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="{Binding SelectedMovie.Name}" FontSize="50" />
+
+                <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" />
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+
+                    <TextBlock Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                </StackPanel>
+                
+                <TextBlock Text="{Binding SelectedMovie.Rating}" FontSize="{StaticResource FontL}" />
+            </StackPanel>
+
+            <Button Grid.Row="1" Command="{Binding ToolCommand}" CommandParameter="Play" FontSize="{StaticResource FontL}">
+                <Button.Content>
+                    <uwp:FontAwesome Icon="Play" FontSize="40" HorizontalAlignment="Center" />
+                </Button.Content>
+            </Button>
+        </Grid>
     </Grid>
 </Page>
+

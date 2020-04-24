@@ -6,16 +6,13 @@ namespace Jellyfin.Services
 {
     public sealed class JellyfinNavigationService : IJellyfinNavigationService
     {
-
-        // alternative to void Navigate(Type t)
-        //public void Navigate(Type sourcePage) {
-        //    Navigate (sourcePage, null);
-        //}
-        // or with paramterless
-        //public void Navigate(Type sourcePage, object paramter = null) {
-        //    Navigate (sourcePage, parameter);
-        //}
         public void Navigate(Type sourcePage)
+        {
+            var frame = (Frame)Window.Current.Content;
+            frame.Navigate(sourcePage);
+        }
+
+        public void Navigate2(Type sourcePage, object parameter)
         {
             var frame = (Frame)Window.Current.Content;
             frame.Navigate(sourcePage);

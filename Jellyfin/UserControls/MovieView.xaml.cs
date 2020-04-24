@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
 
@@ -15,17 +13,12 @@ namespace Jellyfin.Views
     {
         public MovieView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            //.Navigate(typeof(MovieDetailView)
-        }
-
+        
         private void MovieGridView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            (DataContext as MovieViewModel).NavigateToMovie();
+            (DataContext as MovieViewModel).NavigateToMovie(e.ClickedItem as Movie);
         }
     }
 }

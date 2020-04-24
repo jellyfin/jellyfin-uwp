@@ -137,6 +137,8 @@
     <Compile Include="Core\Central.cs" />
     <Compile Include="Core\Globals.cs" />
     <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Models\Adapters\IAdapter.cs" />
+    <Compile Include="Models\Adapters\MovieAdapter.cs" />
     <Compile Include="UnityRegistration.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -149,11 +151,16 @@
     <Compile Include="Services\JellyfinNavigationService.cs" />
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\JellyfinViewModelBase.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MediaPlaybackViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\MovieDetailViewModel.cs" />
     <Compile Include="ViewModels\MovieViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Views\MediaPlaybackView.xaml.cs">
+      <DependentUpon>MediaPlaybackView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MovieDetailView.xaml.cs">
       <DependentUpon>MovieDetailView.xaml</DependentUpon>
     </Compile>
@@ -253,6 +260,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\MediaPlaybackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MovieDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -275,6 +286,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FontAwesome.UWP">
+      <Version>4.7.0.9</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>

@@ -1,6 +1,5 @@
-﻿using System.Net.Http;
-using Windows.UI.Xaml.Media.Imaging;
-using Newtonsoft.Json;
+﻿using System;
+using System.Net.Http;
 
 namespace Jellyfin.Models
 {
@@ -31,6 +30,46 @@ namespace Jellyfin.Models
         public string Name { get; set; }
 
         public string Year { get; set; }
+
+        public bool HasSubtitles { get; set; }
+
+        public DateTimeOffset PremiereDate { get; set; }
+
+        public string Rating { get; set; }
+
+        public TimeSpan Runtime { get; set; }
+
+        public string FormattedRuntime
+        {
+            get { return Runtime.Hours + " hr " + Runtime.Minutes + " min"; }
+        }
+
+        public TimeSpan PlaybackPosition { get; set; }
+
+        public TimeSpan PlaybackRemaining
+        {
+            get { return Runtime - PlaybackPosition; }
+        }
+
+        public string FormattedPlaybackRemaining
+        {
+            get
+            {
+                if (PlaybackRemaining == TimeSpan.Zero)
+                {
+                    return string.Empty;
+                }
+
+                if (PlaybackRemaining == Runtime)
+                {
+                    return string.Empty;
+                }
+
+                return $" • {PlaybackRemaining.Hours} hr {PlaybackRemaining.Minutes} min remaining";
+            }
+        }
+
+        public bool IsPlayed { get; set; }
 
         #endregion
 

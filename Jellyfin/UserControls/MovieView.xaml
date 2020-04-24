@@ -7,10 +7,13 @@
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:models="using:Jellyfin.Models"
     mc:Ignorable="d"
-    Background="DarkSlateGray" BorderBrush="Blue" BorderThickness="2">
-    <Frame.DataContext>
-        <viewModels:MovieViewModel />
-    </Frame.DataContext>
+    DataContext="{Binding MoviePage, Source={StaticResource ViewModelLocator}}">
+    <Frame.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="#FF552f56" Offset="0"/>
+            <GradientStop Color="#FF1f4f5f" Offset="1"/>
+        </LinearGradientBrush>
+    </Frame.Background>
     <Frame.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -31,14 +34,11 @@
         <GridView x:Name="movieGridView" Grid.Row="2" ItemsSource="{Binding Movies}" Margin="0, 30, 0, 0" IsItemClickEnabled="True" ItemClick="MovieGridView_OnItemClick">
             <GridView.ItemTemplate>
                 <DataTemplate x:Name="MovieDataTemplate" x:DataType="models:Movie">
-                    <Button BorderThickness="0" Command="{Binding ElementName=movieGridView,
-                       Path=DataContext.ToolCommand}" CommandParameter="Test" Click="ButtonBase_OnClick">
-                        <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Height="400" Width="250">
-                            <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
-                            <TextBlock Text="{x:Bind Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Height="400" Width="250">
+                        <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
+                        <TextBlock Text="{x:Bind Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

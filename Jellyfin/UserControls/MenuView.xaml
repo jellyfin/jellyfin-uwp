@@ -17,14 +17,15 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Frame.Resources>
-    <Grid HorizontalAlignment="Stretch" BorderBrush="Aqua" BorderThickness="2">
+    <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Margin="30 30 30 150" BorderThickness="1" BorderBrush="AliceBlue" HorizontalAlignment="Right">
-            <TextBlock Text="LOL Testing" FontSize="{StaticResource FontL}"  FontFamily="{StaticResource JellyfinFamilyFont}"  />
-        </Border>
+        <StackPanel Grid.Row="0" Margin="30 30 30 150" HorizontalAlignment="Right">
+            <TextBlock Text="Jellyfin" FontSize="60"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right"  />
+            <TextBlock Text="username@goes.here" FontSize="{StaticResource FontM}" TextAlignment="Right" FontFamily="{StaticResource JellyfinFamilyFont}"  />
+        </StackPanel>
 
         <StackPanel Grid.Row="1">
             <Button Command="{Binding ToolCommand}"
@@ -36,14 +37,14 @@
                 </Button.Content>
             </Button>
 
-            <Button Command="{Binding ToolCommand}"
+            <!--<Button Command="{Binding ToolCommand}"
                     Padding="35"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
                     CommandParameter="TvShows">
                 <Button.Content>
                     <TextBlock Text="Tv Shows" FontSize="{StaticResource FontL}" />
                 </Button.Content>
-            </Button>
+            </Button>-->
         </StackPanel>
     </Grid>
 </Frame>

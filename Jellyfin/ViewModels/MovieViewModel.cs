@@ -1,18 +1,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using Windows.UI.Xaml.Controls;
-using GalaSoft.MvvmLight.Views;
-using Jellyfin.Core;
 using Jellyfin.Models;
-using Jellyfin.Services;
+using Jellyfin.Models.Adapters;
 using Jellyfin.Views;
 using Newtonsoft.Json;
-using Unity;
 
 namespace Jellyfin.ViewModels
 {
-    public class MovieViewModel : BaseViewModel
+    public class MovieViewModel : JellyfinViewModelBase
     {
         #region Properties
 
@@ -69,28 +65,20 @@ namespace Jellyfin.ViewModels
                 var resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
 
                 resultSet.ToString();
+                MovieAdapter mAdapter = new MovieAdapter();
 
                 foreach (var item in resultSet.Items)
                 {
-                    Movies.Add(new Movie
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Year = item.ProductionYear.ToString(),
-                        ImageId = item.ImageTags.Primary
-                    });
+                    Movies.Add(mAdapter.Convert(item));
                 }
             }
         }
 
         #endregion
 
-        public void NavigateToMovie()
+        public void NavigateToMovie(Movie movie)
         {
-            IUnityContainer container = Globals.Instance.Container;
-            IJellyfinNavigationService navigationService = container.Resolve<IJellyfinNavigationService>();
-
-            navigationService.Navigate(typeof(MovieDetailView));
+            NavigationService.Navigate(typeof(MovieDetailView), movie);
         }
     }
 }

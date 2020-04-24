@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="Jellyfin.Views.MediaPlaybackView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
+    mc:Ignorable="d"
+    DataContext="{Binding MediaPlaybackPage, Source={StaticResource ViewModelLocator}}"
+    >
+    <Page.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="#FF552f56" Offset="0"/>
+            <GradientStop Color="#FF1f4f5f" Offset="1"/>
+        </LinearGradientBrush>
+    </Page.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <MediaPlayerElement AreTransportControlsEnabled="False"
+            x:Name="mediaPlayerElement" AutoPlay="True" Stretch="Uniform"
+            PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
+                            KeyDown="MediaPlayerElement_OnKeyDown"
+            IsFocusEngagementEnabled="True"
+        />
+        
+        <StackPanel Grid.Row="0" VerticalAlignment="Bottom">
+            <Button Content="Stop" />
+            <Button Content="Play" />
+        </StackPanel>
+    </Grid>
+</Page>

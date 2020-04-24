@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Jellyfin.ViewModels
 {
-    public class MenuViewModel : BaseViewModel
+    public class MenuViewModel : JellyfinViewModelBase
     {
         #region Properties
 

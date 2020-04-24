@@ -1,6 +1,8 @@
 ﻿using Jellyfin.Core;
 using Jellyfin.Services;
+using Jellyfin.ViewModels;
 using Unity;
+using Unity.Lifetime;
 
 namespace Jellyfin
 {
@@ -15,6 +17,7 @@ namespace Jellyfin
         public static void RegisterTypes()
         {
             var container = Globals.Instance.Container;
+            
             container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
         }
     }
