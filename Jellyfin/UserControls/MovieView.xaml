@@ -1,0 +1,46 @@
+﻿<Frame
+    x:Class="Jellyfin.Views.MovieView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Jellyfin.ViewModels"
+    xmlns:models="using:Jellyfin.Models"
+    mc:Ignorable="d"
+    Background="DarkSlateGray" BorderBrush="Blue" BorderThickness="2">
+    <Frame.DataContext>
+        <viewModels:MovieViewModel />
+    </Frame.DataContext>
+    <Frame.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/JellyfinStyleResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Frame.Resources>
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Button Grid.Row="0" Content="placeholder" />
+        <Button Grid.Row="1" Content="placeholder" />
+
+        <GridView x:Name="movieGridView" Grid.Row="2" ItemsSource="{Binding Movies}" Margin="0, 30, 0, 0" IsItemClickEnabled="True" ItemClick="MovieGridView_OnItemClick">
+            <GridView.ItemTemplate>
+                <DataTemplate x:Name="MovieDataTemplate" x:DataType="models:Movie">
+                    <Button BorderThickness="0" Command="{Binding ElementName=movieGridView,
+                       Path=DataContext.ToolCommand}" CommandParameter="Test" Click="ButtonBase_OnClick">
+                        <StackPanel Orientation="Vertical" Margin="11, 0, 11, 25" Height="400" Width="250">
+                            <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
+                            <TextBlock Text="{x:Bind Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</Frame>

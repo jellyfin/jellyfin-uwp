@@ -1,8 +1,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using Windows.UI.Xaml.Controls;
+using GalaSoft.MvvmLight.Views;
+using Jellyfin.Core;
 using Jellyfin.Models;
+using Jellyfin.Services;
+using Jellyfin.Views;
 using Newtonsoft.Json;
+using Unity;
 
 namespace Jellyfin.ViewModels
 {
@@ -35,6 +41,19 @@ namespace Jellyfin.ViewModels
 
         #region Additional methods
 
+        protected override void Execute(string commandParameter)
+        {
+            switch (commandParameter)
+            {
+                case "Test":
+                    //Frame.Navigate()
+                    break;
+                default:
+                    base.Execute(commandParameter);
+                    break;
+            }
+        }
+
         public void Load()
         {
             String movies =
@@ -65,5 +84,13 @@ namespace Jellyfin.ViewModels
         }
 
         #endregion
+
+        public void NavigateToMovie()
+        {
+            IUnityContainer container = Globals.Instance.Container;
+            IJellyfinNavigationService navigationService = container.Resolve<IJellyfinNavigationService>();
+
+            navigationService.Navigate(typeof(MovieDetailView));
+        }
     }
 }

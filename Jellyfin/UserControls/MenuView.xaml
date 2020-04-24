@@ -1,0 +1,49 @@
+﻿<Frame
+    x:Class="Jellyfin.Views.MenuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Jellyfin.ViewModels"
+    mc:Ignorable="d"
+    Background="Black">
+    <Frame.DataContext>
+        <viewModels:MenuViewModel />
+    </Frame.DataContext>
+    <Frame.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/JellyfinStyleResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Frame.Resources>
+    <Grid HorizontalAlignment="Stretch" BorderBrush="Aqua" BorderThickness="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Margin="30 30 30 150" BorderThickness="1" BorderBrush="AliceBlue" HorizontalAlignment="Right">
+            <TextBlock Text="LOL Testing" FontSize="{StaticResource FontL}"  FontFamily="{StaticResource JellyfinFamilyFont}"  />
+        </Border>
+
+        <StackPanel Grid.Row="1">
+            <Button Command="{Binding ToolCommand}"
+                    Padding="35"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+                    CommandParameter="Movies">
+                <Button.Content>
+                    <TextBlock Text="Movies" FontSize="{StaticResource FontL}" />
+                </Button.Content>
+            </Button>
+
+            <Button Command="{Binding ToolCommand}"
+                    Padding="35"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+                    CommandParameter="TvShows">
+                <Button.Content>
+                    <TextBlock Text="Tv Shows" FontSize="{StaticResource FontL}" />
+                </Button.Content>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Frame>
