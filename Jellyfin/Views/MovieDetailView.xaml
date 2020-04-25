@@ -16,7 +16,7 @@
             <GradientStop Color="#FF1f4f5f" Offset="1"/>
         </LinearGradientBrush>
     </Page.Background>
-    <Grid Margin="15, 150, 15, 15">
+    <Grid Margin="15, 150, 30, 15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -29,23 +29,41 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBlock Text="{Binding SelectedMovie.Name}" FontSize="50" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding SelectedMovie.Name}" FontSize="50" Margin="0, 0, 0, 20" />
 
-                <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock Text="{Binding SelectedMovie.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
+
+                        <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+                
+                <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+                    <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
 
-                    <TextBlock Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                    <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                    
+                    <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5">
+                        <TextBlock Text="{Binding SelectedMovie.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
+                    </Border>
                 </StackPanel>
-                
-                <TextBlock Text="{Binding SelectedMovie.Rating}" FontSize="{StaticResource FontL}" />
+
+                <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
+                           Margin="0, 10, 0, 10" />
             </StackPanel>
 
-            <Button Grid.Row="1" Command="{Binding ToolCommand}" Width="80"  CommandParameter="Play"  Style="{StaticResource SelectableButton}">
+            <Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80"  CommandParameter="Play"  Style="{StaticResource SelectableButton}">
                 <Button.Content>
                     <uwp:FontAwesome Icon="Play" FontSize="35" HorizontalAlignment="Center" />
                 </Button.Content>

@@ -1,5 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Models;
+using Jellyfin.Services.Interfaces;
 using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
@@ -10,9 +13,9 @@ namespace Jellyfin.ViewModels
 
         #region SelectedMovie
 
-        private Movie _selectedMovie;
+        private MovieDetail _selectedMovie;
 
-        public Movie SelectedMovie
+        public MovieDetail SelectedMovie
         {
             get { return _selectedMovie; }
             set
@@ -24,8 +27,23 @@ namespace Jellyfin.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Reference for the movie service.
+        /// </summary>
+        private readonly IMovieService _movieService;
+
         #endregion
-        
+
+        #region ctor
+
+        public MovieDetailViewModel(IMovieService movieService)
+        {
+            _movieService = movieService ??
+                    throw new ArgumentNullException(nameof(movieService));
+        }
+
+        #endregion
+
         #region Additional methods
 
         protected override void Execute(string commandParameter)
@@ -39,6 +57,11 @@ namespace Jellyfin.ViewModels
                     base.Execute(commandParameter);
                     break;
             }
+        }
+
+        public async Task GetMovieDetails(Movie movie)
+        {
+            SelectedMovie = await _movieService.GetMovieDetails(movie.Id);
         }
 
         private void Play()

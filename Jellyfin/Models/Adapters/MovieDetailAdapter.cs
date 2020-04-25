@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Linq;
 using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Models.Adapters
 {
     /// <summary>
-    /// Adapter to map the JSON Item to Movie.
+    /// Adapter to map the JSON Movie Detail to Movie detail.
     /// </summary>
-    public class MovieAdapter : IAdapter<Item, Movie>
+    public class MovieDetailAdapter : IAdapter<MovieDetailsResult, MovieDetail>
     {
         #region Properties
 
@@ -16,19 +17,19 @@ namespace Jellyfin.Models.Adapters
 
         #region ctor
 
-        public MovieAdapter(IImageService imageService)
+        public MovieDetailAdapter(IImageService imageService)
         {
             _imageService = imageService ??
-                throw new ArgumentNullException(nameof(imageService));
+                            throw new ArgumentNullException(nameof(imageService));
         }
 
         #endregion
 
         #region Additional methods
 
-        public Movie Convert(Item source)
+        public MovieDetail Convert(MovieDetailsResult source)
         {
-            Movie m = new Movie();
+            MovieDetail m = new MovieDetail();
 
             m.Id = source.Id;
             m.Name = source.Name;
@@ -36,12 +37,17 @@ namespace Jellyfin.Models.Adapters
             m.ImageId = source.ImageTags.Primary;
             
             m.HasSubtitles = source.HasSubtitles;
-            m.PremiereDate = source.PremiereDate;
             m.CommunityRating = source.CommunityRating.ToString();
+            m.OfficialRating = source.OfficialRating;
             m.Runtime = new TimeSpan(source.RunTimeTicks);
             m.PlaybackPosition = new TimeSpan(source.UserData.PlaybackPositionTicks);
             m.IsPlayed = source.UserData.Played;
 
+
+            m.Genres = source.Genres;
+            m.Description = source.Overview;
+            m.VideoType = source.MediaStreams.FirstOrDefault(q => q.Type.ToLower() == "video")?.DisplayTitle;
+            m.AudioType = source.MediaStreams.FirstOrDefault(q => q.Type.ToLower() == "audio")?.DisplayTitle;
 
             return m;
         }

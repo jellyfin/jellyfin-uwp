@@ -133,6 +133,10 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Globals.cs" />
+    <Compile Include="Core\TaskQueue.cs" />
+    <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
+    <Compile Include="Models\MovieDetail.cs" />
+    <Compile Include="Models\MovieDetailsResult.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
