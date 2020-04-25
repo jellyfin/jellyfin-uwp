@@ -16,6 +16,14 @@ namespace Jellyfin.ViewModels
             get { return GetHashCode().ToString(); }
         }
 
+        /// <summary>
+        /// For accessing global params from UI
+        /// </summary>
+        public Globals AppGlobals
+        {
+            get { return Globals.Instance; }
+        }
+
         #region ToolCommand
 
         private RelayCommand<string> _toolCommand;

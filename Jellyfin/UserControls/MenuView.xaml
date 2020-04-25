@@ -6,10 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     mc:Ignorable="d"
+    DataContext="{Binding MenuPage, Source={StaticResource ViewModelLocator}}"
     Background="Black">
-    <Frame.DataContext>
-        <viewModels:MenuViewModel />
-    </Frame.DataContext>
     <Frame.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,6 +22,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="30 30 30 150" HorizontalAlignment="Right">
             <TextBlock Text="Jellyfin" FontSize="60"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
+            <TextBlock Text="{Binding AppGlobals.SessionInfo.UserName}" FontSize="30"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
         </StackPanel>
 
         <StackPanel Grid.Row="1">
@@ -33,6 +32,14 @@
                     CommandParameter="Movies">
                 <Button.Content>
                     <TextBlock Text="Movies" FontSize="{StaticResource FontL}" />
+                </Button.Content>
+            </Button>
+            <Button Command="{Binding ToolCommand}"
+                    Padding="35"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+                    CommandParameter="Logout">
+                <Button.Content>
+                    <TextBlock Text="Logout" FontSize="{StaticResource FontL}" />
                 </Button.Content>
             </Button>
         </StackPanel>

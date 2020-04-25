@@ -133,7 +133,8 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Globals.cs" />
-    <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Extensions\XamlExtensions.cs" />
     <Compile Include="Models\Adapters\IAdapter.cs" />

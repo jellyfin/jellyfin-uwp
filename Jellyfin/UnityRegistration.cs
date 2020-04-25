@@ -24,6 +24,7 @@ namespace Jellyfin
             container.RegisterType<IMovieService, MovieService>();
             container.RegisterType<ILoginService, LoginService>();
             container.RegisterType<IImageService, ImageService>();
+            container.RegisterType<ISettingsService, SettingsService>();
         }
     }
 }

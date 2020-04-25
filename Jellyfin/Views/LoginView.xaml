@@ -46,7 +46,7 @@
                      KeyUp="FocusNextItem"
                      Margin="0 8 0 8" Text="{Binding Host, Mode=TwoWay}" />
             
-            <TextBlock FontFamily="{StaticResource JellyfinFamilyFont}"                         Text="ex: 192.168.1.100:8096 or https://myserver.com. The words 'http://' and 'https://' will be automatically added."
+            <TextBlock FontFamily="{StaticResource JellyfinFamilyFont}"                         Text="ex: 192.168.1.100:8096 or https://myserver.com. The protocol 'http://' and 'https://' will be automatically added."
                        TextWrapping="Wrap"
                 Foreground="{StaticResource Color90}" FontSize="{StaticResource FontS}"
                 Margin="0 0 0 28 "/>

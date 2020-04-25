@@ -6,8 +6,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Jellyfin.Core;
+using Jellyfin.Services.Interfaces;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using Unity;
 
 namespace Jellyfin
 {
@@ -75,7 +78,22 @@ namespace Jellyfin
             {
                 if (rootFrame.Content == null)
                 {
-                    rootFrame.Navigate(typeof(LoginView), e.Arguments);
+                    IUnityContainer container = Globals.Instance.Container;
+                    ISettingsService settingsService = container.Resolve<ISettingsService>();
+
+                    Globals.Instance.LoadSettings(settingsService);
+                    Type toNavigate;
+
+                    if (string.IsNullOrEmpty(Globals.Instance.AccessToken))
+                    {
+                        toNavigate = typeof(LoginView);
+                    }
+                    else
+                    {
+                        toNavigate = typeof(MainWindowView);
+                    }
+
+                    rootFrame.Navigate(toNavigate, e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

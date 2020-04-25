@@ -1,4 +1,7 @@
 ﻿using Jellyfin.Models;
+using Jellyfin.Services.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Unity;
 
 namespace Jellyfin.Core
@@ -13,7 +16,7 @@ namespace Jellyfin.Core
         {
             Container = new UnityContainer();
         }
-
+        
         public static Globals Instance => _instance ?? (_instance = new Globals());
 
         #endregion
@@ -72,6 +75,56 @@ namespace Jellyfin.Core
         public Sessioninfo SessionInfo { get; set; }
 
         public User User { get; set; }
+
+        #endregion
+
+        #region Additional methods
+
+        public void LoadSettings(ISettingsService settingsService)
+        {
+            bool toClearCache = false;
+
+            foreach (string mandatoryItem in new [] {nameof(Host), nameof(AccessToken), nameof(ServerId), nameof(SessionInfo), nameof(User)})
+            {
+                if (!settingsService.Any(mandatoryItem))
+                {
+                    toClearCache = true;
+                    break;
+                }
+
+                string item = settingsService.GetProperty<string>(mandatoryItem);
+
+                if (string.IsNullOrEmpty(item))
+                {
+                    toClearCache = true;
+                    break;
+                }
+            }
+
+            if (toClearCache)
+            {
+                settingsService.Clear();
+                return;
+            }
+
+            Host = settingsService.GetProperty<string>(nameof(Host));
+            AccessToken = settingsService.GetProperty<string>(nameof(AccessToken));
+            ServerId = settingsService.GetProperty<string>(nameof(ServerId));
+            string sessionInfoJson = settingsService.GetProperty<string>(nameof(SessionInfo));
+            SessionInfo = JsonConvert.DeserializeObject<Sessioninfo>(sessionInfoJson);
+
+            string userJson = settingsService.GetProperty<string>(nameof(User));
+            User = JsonConvert.DeserializeObject<User>(userJson);
+        }
+
+        public void SaveSettings(ISettingsService settingsService)
+        {
+            settingsService.SetProperty(nameof(Host), Host);
+            settingsService.SetProperty(nameof(AccessToken), AccessToken);
+            settingsService.SetProperty(nameof(ServerId), ServerId);
+            settingsService.SetProperty(nameof(SessionInfo), JsonConvert.SerializeObject(SessionInfo));
+            settingsService.SetProperty(nameof(User), JsonConvert.SerializeObject(User));
+        }
 
         #endregion
     }

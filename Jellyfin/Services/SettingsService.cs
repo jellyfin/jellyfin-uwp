@@ -1,11 +1,14 @@
-﻿using Windows.Storage;
+﻿using System.Linq;
+using Windows.Storage;
+using Jellyfin.Services.Interfaces;
 
-namespace Jellyfin.Core
+namespace Jellyfin.Services
 {
-    public class SettingsManager
+    public class SettingsService : ISettingsService
     {
+        #region Properties
+
         string CONTAINER_SETTINGS = "APPSETTINGS";
-        string SETTING_SERVER = "SERVER";
 
         private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
         private ApplicationDataContainer ContainerSettings
@@ -20,17 +23,28 @@ namespace Jellyfin.Core
             }
         }
 
-        public bool HasJellyfinServer => !string.IsNullOrEmpty(JellyfinServer);
+        #endregion
 
-        public string JellyfinServer
+        #region Additional methods
+
+        public void Clear()
         {
-            get => GetProperty<string>(SETTING_SERVER);
-            set => SetProperty(SETTING_SERVER, value);
+            ContainerSettings.Values.Clear();
         }
 
-        private void SetProperty(string propertyName, object value)
+        public void DeleteProperty(string propertyName)
+        {
+            ContainerSettings.Values.Remove(propertyName);
+        }
+
+        public void SetProperty(string propertyName, object value)
         {
             ContainerSettings.Values[propertyName] = value;
+        }
+
+        public bool Any(string propertyName)
+        {
+            return ContainerSettings.Values.Any(q => q.Key == propertyName);
         }
 
         public T GetProperty<T>(string propertyName, T defaultValue = default(T))
@@ -44,5 +58,7 @@ namespace Jellyfin.Core
 
             return defaultValue;
         }
+
+        #endregion
     }
 }

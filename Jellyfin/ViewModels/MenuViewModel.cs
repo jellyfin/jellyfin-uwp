@@ -1,4 +1,6 @@
-using System.Diagnostics;
+using System;
+using Jellyfin.Services.Interfaces;
+using Jellyfin.Views;
 
 namespace Jellyfin.ViewModels
 {
@@ -6,9 +8,28 @@ namespace Jellyfin.ViewModels
     {
         #region Properties
 
+        /// <summary>
+        /// Reference for the settings service.
+        /// </summary>
+        private readonly ISettingsService _settingsService;
+
+        /// <summary>
+        /// Reference for the navigation service.
+        /// </summary>
+        private readonly IJellyfinNavigationService _navigationService;
+
         #endregion
 
         #region ctor
+
+        public MenuViewModel(ISettingsService settingsService, IJellyfinNavigationService jellyfinNavigationService)
+        {
+            _settingsService = settingsService ??
+                throw new ArgumentNullException(nameof(settingsService));
+
+            _navigationService = jellyfinNavigationService ??
+                throw new ArgumentNullException(nameof(jellyfinNavigationService));
+        }
 
         #endregion
 
@@ -18,8 +39,8 @@ namespace Jellyfin.ViewModels
         {
             switch (commandParameter)
             {
-                case "Movies":
-                    OpenMovies();
+                case "Logout":
+                    Logout();
                     break;
                 default:
                     base.Execute(commandParameter);
@@ -27,9 +48,10 @@ namespace Jellyfin.ViewModels
             }
         }
 
-        private void OpenMovies()
+        private void Logout()
         {
-            Debugger.Break();
+            _settingsService.Clear();
+            _navigationService.Navigate(typeof(LoginView));
         }
 
         #endregion

@@ -111,16 +111,24 @@ namespace Jellyfin.ViewModels
         /// </summary>
         private ILoginService _loginService { get; set; }
 
+        /// <summary>
+        /// Reference for the settings service.
+        /// </summary>
+        private ISettingsService _settingsService { get; set; }
+
         #endregion
 
         #region ctor
 
-        public LoginViewModel(ILoginService loginService)
+        public LoginViewModel(ILoginService loginService, ISettingsService settingsService)
         {
             _loginService = loginService ??
                 throw new ArgumentNullException(nameof(loginService));
-        }
 
+            _settingsService = settingsService ??
+                throw new ArgumentNullException(nameof(settingsService));
+        }
+        
         #endregion
 
         #region Additional methods
@@ -136,6 +144,17 @@ namespace Jellyfin.ViewModels
                     base.Execute(commandParameter);
                     break;
             }
+        }
+
+        public void InitializeSessionSettings()
+        {
+            Globals.Instance.LoadSettings(_settingsService);
+            if (string.IsNullOrEmpty(Globals.Instance.AccessToken))
+            {
+                return;
+            }
+
+            NavigationService.Navigate(typeof(MainWindowView));
         }
 
         public async Task Login()
@@ -180,6 +199,7 @@ namespace Jellyfin.ViewModels
 
             if (!string.IsNullOrEmpty(Globals.Instance.AccessToken))
             {
+                Globals.Instance.SaveSettings(_settingsService);
                 NavigationService.Navigate(typeof(MainWindowView));
             }
         }
