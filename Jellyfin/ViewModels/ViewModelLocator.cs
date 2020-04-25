@@ -1,4 +1,5 @@
 ﻿using Jellyfin.Core;
+using Jellyfin.Services.Interfaces;
 using Unity;
 
 namespace Jellyfin.ViewModels
@@ -11,38 +12,80 @@ namespace Jellyfin.ViewModels
     {
         #region Properties
 
-        private readonly IUnityContainer container;
+        /// <summary>
+        /// Reference for Unity Container.
+        /// </summary>
+        private IUnityContainer _container;
 
         #endregion
 
+        #region ctor
+
         public ViewModelLocator()
         {
-            container = Globals.Instance.Container;
-
-            container.RegisterInstance(new MainViewModel());
-            container.RegisterInstance(new MovieDetailViewModel());
-            container.RegisterInstance(new MovieViewModel());
-            container.RegisterInstance(new MediaPlaybackViewModel());
+            ConfigureViewModelMappings();
         }
 
+        private void ConfigureViewModelMappings()
+        {
+            _container = Globals.Instance.Container;
+
+            IMovieService movieService = _container.Resolve<IMovieService>();
+            ILoginService loginService = _container.Resolve<ILoginService>();
+
+            _container.RegisterInstance(new MainViewModel());
+            _container.RegisterInstance(new MovieDetailViewModel());
+            _container.RegisterInstance(new MovieListViewModel(movieService));
+            _container.RegisterInstance(new MediaPlaybackViewModel());
+            _container.RegisterInstance(new LoginViewModel(loginService));
+        }
+
+        #endregion
+
+        #region Additional methods
+
+        /// <summary>
+        /// Mapping for Main Page - Main View model.
+        /// </summary>
         public MainViewModel MainPage
         {
-            get { return container.Resolve<MainViewModel>(); }
+            get => _container.Resolve<MainViewModel>();
         }
 
+        /// <summary>
+        /// Mapping for Movie Details Page - Movie Details View model.
+        /// </summary>
         public MovieDetailViewModel MovieDetailPage
         {
-            get { return container.Resolve<MovieDetailViewModel>(); }
+            get => _container.Resolve<MovieDetailViewModel>();
         }
 
-        public MovieViewModel MoviePage
+        /// <summary>
+        /// Mapping for Movie List Page - Movie list View Model.
+        /// </summary>
+        public MovieListViewModel MovieListPage
         {
-            get { return container.Resolve<MovieViewModel>(); }
+            get => _container.Resolve<MovieListViewModel>();
         }
 
+        /// <summary>
+        /// Mapping for Media Playback Page - Media Playback View Model.
+        /// </summary>
         public MediaPlaybackViewModel MediaPlaybackPage
         {
-            get { return container.Resolve<MediaPlaybackViewModel>(); }
+            get => _container.Resolve<MediaPlaybackViewModel>();
         }
+
+        /// <summary>
+        /// Mapping for Login Page - Login View Model.
+        /// </summary>
+        public LoginViewModel LoginPage
+        {
+            get => _container.Resolve<LoginViewModel>();
+        }
+
+        
+
+        #endregion
     }
 }

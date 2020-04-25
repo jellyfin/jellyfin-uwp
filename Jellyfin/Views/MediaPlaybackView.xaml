@@ -7,27 +7,13 @@
     PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
     mc:Ignorable="d"
     DataContext="{Binding MediaPlaybackPage, Source={StaticResource ViewModelLocator}}"
-    >
-    <Page.Background>
-        <LinearGradientBrush>
-            <GradientStop Color="#FF552f56" Offset="0"/>
-            <GradientStop Color="#FF1f4f5f" Offset="1"/>
-        </LinearGradientBrush>
-    </Page.Background>
+    Background="Black">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <MediaPlayerElement AreTransportControlsEnabled="False"
             x:Name="mediaPlayerElement" AutoPlay="True" Stretch="Uniform"
             PreviewKeyDown="MediaPlaybackView_OnPreviewKeyDown"
                             KeyDown="MediaPlayerElement_OnKeyDown"
             IsFocusEngagementEnabled="True"
         />
-        
-        <StackPanel Grid.Row="0" VerticalAlignment="Bottom">
-            <Button Content="Stop" />
-            <Button Content="Play" />
-        </StackPanel>
     </Grid>
 </Page>

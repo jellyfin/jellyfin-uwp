@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Windows.System;
 using Jellyfin.Models;
 using Jellyfin.Views;
@@ -26,25 +25,7 @@ namespace Jellyfin.ViewModels
         #endregion
 
         #endregion
-
-        #region ctor
-
-        public MovieDetailViewModel()
-        {
-            PropertyChanged += OnPropertyChanged;
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            //if (propertyChangedEventArgs.PropertyName == nameof(SelectedMovie))
-            //{
-            //    RaisePropertyChanged(nameof(SelectedMovie.ImageData));
-            //    RaisePropertyChanged(nameof(SelectedMovie.Name));
-            //}
-        }
-
-        #endregion
-
+        
         #region Additional methods
 
         protected override void Execute(string commandParameter)

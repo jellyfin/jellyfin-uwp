@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Windows.Storage;
 
 namespace Jellyfin.Core
 {
@@ -25,22 +20,22 @@ namespace Jellyfin.Core
             }
         }
 
-        public bool HasJellyfinServer => !String.IsNullOrEmpty(JellyfinServer);
+        public bool HasJellyfinServer => !string.IsNullOrEmpty(JellyfinServer);
 
-        public String JellyfinServer
+        public string JellyfinServer
         {
-            get => GetProperty<String>(SETTING_SERVER);
+            get => GetProperty<string>(SETTING_SERVER);
             set => SetProperty(SETTING_SERVER, value);
         }
 
-        private void SetProperty(String propertyName, object value)
+        private void SetProperty(string propertyName, object value)
         {
             ContainerSettings.Values[propertyName] = value;
         }
 
-        public T GetProperty<T>(String propertyName, T defaultValue = default(T))
+        public T GetProperty<T>(string propertyName, T defaultValue = default(T))
         {
-            var value = ContainerSettings.Values[propertyName];
+            object value = ContainerSettings.Values[propertyName];
 
             if (value != null)
             {

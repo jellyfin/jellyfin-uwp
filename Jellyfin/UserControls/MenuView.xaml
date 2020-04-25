@@ -1,5 +1,5 @@
 ﻿<Frame
-    x:Class="Jellyfin.Views.MenuView"
+    x:Class="Jellyfin.UserControls.MenuView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -23,8 +23,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="30 30 30 150" HorizontalAlignment="Right">
-            <TextBlock Text="Jellyfin" FontSize="60"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right"  />
-            <TextBlock Text="username@goes.here" FontSize="{StaticResource FontM}" TextAlignment="Right" FontFamily="{StaticResource JellyfinFamilyFont}"  />
+            <TextBlock Text="Jellyfin" FontSize="60"  FontFamily="{StaticResource JellyfinFamilyFont}" TextAlignment="Right" />
         </StackPanel>
 
         <StackPanel Grid.Row="1">
@@ -36,15 +35,6 @@
                     <TextBlock Text="Movies" FontSize="{StaticResource FontL}" />
                 </Button.Content>
             </Button>
-
-            <!--<Button Command="{Binding ToolCommand}"
-                    Padding="35"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
-                    CommandParameter="TvShows">
-                <Button.Content>
-                    <TextBlock Text="Tv Shows" FontSize="{StaticResource FontL}" />
-                </Button.Content>
-            </Button>-->
         </StackPanel>
     </Grid>
 </Frame>

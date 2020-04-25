@@ -1,5 +1,4 @@
-﻿// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-using Windows.UI.Xaml.Input;
+﻿using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Jellyfin.Models;
 using Jellyfin.ViewModels;
@@ -13,9 +12,12 @@ namespace Jellyfin.Views
     {
         public MovieDetailView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles key press for the UI.
+        /// </summary>
         private void MovieDetailView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if ((DataContext as MovieDetailViewModel).HandleKeyPressed(e.Key))
@@ -24,6 +26,10 @@ namespace Jellyfin.Views
             }
         }
 
+        /// <summary>
+        /// Retrieves the passed movie parameter from the old view.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Movie movie = e.Parameter as Movie;

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.System.Profile;
 
 namespace Jellyfin.Utils
 {
     public class AppUtils
     {
-        static bool? _isXbox = null;
+        static bool? _isXbox;
         public static Boolean IsXbox
         {
             get

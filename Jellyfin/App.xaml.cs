@@ -1,5 +1,4 @@
-﻿using Jellyfin.Utils;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI;
@@ -7,6 +6,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Jellyfin.Utils;
 using Jellyfin.Views;
 
 namespace Jellyfin
@@ -22,11 +22,11 @@ namespace Jellyfin
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            App.Current.RequiresPointerMode = Windows.UI.Xaml.ApplicationRequiresPointerMode.WhenRequested;
+            Current.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
-            this.Suspending += OnSuspending;
+            Suspending += OnSuspending;
 
             UnityRegistration.RegisterTypes();
         }
@@ -75,21 +75,7 @@ namespace Jellyfin
             {
                 if (rootFrame.Content == null)
                 {
-                    rootFrame.Navigate(typeof(MainWindowView), e.Arguments);
-
-
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    //if (Core.Central.Settings.HasJellyfinServer)
-                    //{
-                    //    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                    //}
-                    //else
-                    //{
-                    //    rootFrame.Navigate(typeof(Views.OnBoarding), e.Arguments);
-                    //}
-
+                    rootFrame.Navigate(typeof(LoginView), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

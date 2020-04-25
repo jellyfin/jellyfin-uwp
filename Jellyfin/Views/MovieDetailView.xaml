@@ -45,9 +45,9 @@
                 <TextBlock Text="{Binding SelectedMovie.Rating}" FontSize="{StaticResource FontL}" />
             </StackPanel>
 
-            <Button Grid.Row="1" Command="{Binding ToolCommand}" CommandParameter="Play" FontSize="{StaticResource FontL}">
+            <Button Grid.Row="1" Command="{Binding ToolCommand}" Width="80"  CommandParameter="Play"  Style="{StaticResource SelectableButton}">
                 <Button.Content>
-                    <uwp:FontAwesome Icon="Play" FontSize="40" HorizontalAlignment="Center" />
+                    <uwp:FontAwesome Icon="Play" FontSize="35" HorizontalAlignment="Center" />
                 </Button.Content>
             </Button>
         </Grid>

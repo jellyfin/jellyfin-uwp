@@ -42,10 +42,6 @@ namespace Jellyfin.ViewModels
 
         #region ctor
 
-        public MediaPlaybackViewModel()
-        { 
-        }
-        
         #endregion
 
         #region Additional methods

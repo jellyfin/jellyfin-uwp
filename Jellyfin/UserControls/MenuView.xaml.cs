@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using Windows.UI.Xaml;
+﻿
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Jellyfin.Views
+namespace Jellyfin.UserControls
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -12,7 +11,7 @@ namespace Jellyfin.Views
     {
         public MenuView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

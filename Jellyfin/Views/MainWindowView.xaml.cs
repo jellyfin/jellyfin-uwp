@@ -11,7 +11,7 @@ namespace Jellyfin.Views
     {
         public MainWindowView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

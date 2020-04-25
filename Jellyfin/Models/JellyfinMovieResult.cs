@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Jellyfin.Models
 {
-    public partial class JellyfinMovieResult
+    public class JellyfinMovieResult
     {
         [JsonProperty("Items")]
         public Item[] Items { get; set; }
@@ -15,7 +15,7 @@ namespace Jellyfin.Models
         public long StartIndex { get; set; }
     }
 
-    public partial class Item
+    public class Item
     {
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -78,13 +78,13 @@ namespace Jellyfin.Models
         public string MediaType { get; set; }
     }
 
-    public partial class ImageTags
+    public class ImageTags
     {
         [JsonProperty("Primary")]
         public string Primary { get; set; }
     }
 
-    public partial class UserData
+    public class UserData
     {
         [JsonProperty("PlaybackPositionTicks")]
         public long PlaybackPositionTicks { get; set; }

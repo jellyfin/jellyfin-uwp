@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Jellyfin.Services.Interfaces;
 
 namespace Jellyfin.Services
 {
@@ -8,19 +9,13 @@ namespace Jellyfin.Services
     {
         public void Navigate(Type sourcePage)
         {
-            var frame = (Frame)Window.Current.Content;
-            frame.Navigate(sourcePage);
-        }
-
-        public void Navigate2(Type sourcePage, object parameter)
-        {
-            var frame = (Frame)Window.Current.Content;
+            Frame frame = (Frame)Window.Current.Content;
             frame.Navigate(sourcePage);
         }
 
         public void Navigate(Type sourcePage, object parameter)
         {
-            var frame = (Frame)Window.Current.Content;
+            Frame frame = (Frame)Window.Current.Content;
             frame.Navigate(sourcePage, parameter);
         }
 
@@ -52,11 +47,15 @@ namespace Jellyfin.Services
 
         private static void Go(bool isForward)
         {
-            var frame = (Frame)Window.Current.Content;
+            Frame frame = (Frame)Window.Current.Content;
             if (isForward)
+            {
                 frame.GoForward();
+            }
             else
+            {
                 frame.GoBack();
+            }
         }
     }
 }
