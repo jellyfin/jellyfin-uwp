@@ -133,6 +133,11 @@
     <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\ParametrizedBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Globals.cs" />
+    <Compile Include="Core\TaskQueue.cs" />
+    <Compile Include="Models\Adapters\MovieDetailAdapter.cs" />
+    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\MovieDetail.cs" />
+    <Compile Include="Models\MovieDetailsResult.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Extensions\HttpClientExtensions.cs" />
@@ -192,6 +197,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Images\play-button.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />

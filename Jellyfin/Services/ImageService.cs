@@ -1,13 +1,8 @@
-using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Extensions;
-using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
-using Newtonsoft.Json;
 
 namespace Jellyfin.Services
 {
@@ -16,27 +11,32 @@ namespace Jellyfin.Services
         #region Additional methods
         
         /// <summary>
-        /// Retrieves image for a movie.
-        /// TODO to extend to be generic for any media type.
+        /// Retrieves image as byte array by its id.
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="id">The ID of the media library element.</param>
+        /// <param name="imageId">The ID of the image.</param>
         /// <returns></returns>
-        public async Task GetImage(Movie movie)
+        public async Task<byte[]> GetImage(string id, string imageId)
         {
-            if (movie == null)
+            if (string.IsNullOrEmpty(id))
             {
-                return;
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(imageId))
+            {
+                return null;
             }
 
             string image =
-                $"{Globals.Instance.Host}/Items/{movie.Id}/Images/Primary?maxHeight=300&maxWidth=250&tag={movie.ImageId}&quality=90";
+                $"{Globals.Instance.Host}/Items/{id}/Images/Primary?maxHeight=300&maxWidth=250&tag={imageId}&quality=90";
 
             using (HttpClient cli = new HttpClient())
             {
                 cli.AddAuthorizationHeaders();
 
                 HttpResponseMessage result = await cli.GetAsync(image);
-                movie.ImageData = await result.Content.ReadAsByteArrayAsync();
+                return await result.Content.ReadAsByteArrayAsync();
             }
         }
 

@@ -35,7 +35,7 @@ namespace Jellyfin.Views
             Movie movie = e.Parameter as Movie;
             if (movie != null)
             {
-                (DataContext as MovieDetailViewModel).SelectedMovie = movie;
+                (DataContext as MovieDetailViewModel).GetMovieDetails(movie);
             }
         }
     }

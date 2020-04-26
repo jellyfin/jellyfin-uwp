@@ -20,7 +20,10 @@ namespace Jellyfin
             IUnityContainer container = Globals.Instance.Container;
             
             container.RegisterType<IJellyfinNavigationService, JellyfinNavigationService>();
+
             container.RegisterType<IAdapter<Item, Movie>, MovieAdapter>();
+            container.RegisterType<IAdapter<MovieDetailsResult, MovieDetail>, MovieDetailAdapter>();
+
             container.RegisterType<IMovieService, MovieService>();
             container.RegisterType<ILoginService, LoginService>();
             container.RegisterType<IImageService, ImageService>();

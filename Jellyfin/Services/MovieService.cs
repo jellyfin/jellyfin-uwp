@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Core;
@@ -15,39 +16,74 @@ namespace Jellyfin.Services
     {
         #region Properties
 
-        public const string ListMoviesEndpoint = "/Users/authenticatebyname";
+        /// <summary>
+        /// Queue for downloading movie images.
+        /// </summary>
+        public TaskQueue<Movie> MovieImageDownloadQueue { get; set; }
+
+        public string ListMoviesEndpoint
+        {
+            get =>
+                $"{Globals.Instance.Host}/Users/{Globals.Instance.User.Id}/Items?IncludeItemTypes=Movie&Recursive=true&Fields=PrimaryImageAspectRatio%2CMediaSourceCount%2CBasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary%2CBackdrop%2CBanner%2CThumb&StartIndex=0&Limit=100000"
+            ;
+        }
+
+        public string GetMovieDetailsEndpoint
+        {
+            get => $"{Globals.Instance.Host}/Users/{Globals.Instance.User.Id}/Items/";
+        }
+
+        public string GetRelatedMoviesEndpoint
+        {
+            get => $"{Globals.Instance.Host}/Items/{{0}}/Similar?userId={Globals.Instance.User.Id}&limit=12&fields=PrimaryImageAspectRatio";
+        }
 
         /// <summary>
         /// Reference for the movie adapter.
         /// </summary>
         private readonly IAdapter<Item, Movie> _movieAdapter;
 
+        /// <summary>
+        /// Reference for the movie details adapter.
+        /// </summary>
+        private readonly IAdapter<MovieDetailsResult, MovieDetail> _movieDetailsAdapter;
+
+        /// <summary>
+        /// Reference for the image service.
+        /// </summary>
+        private readonly IImageService _imageService;
+
         #endregion
 
         #region ctor
 
-        public MovieService(IAdapter<Item, Movie> movieAdapter)
+        public MovieService(IAdapter<Item, Movie> movieAdapter, IAdapter<MovieDetailsResult, MovieDetail> movieDetailsAdapter, IImageService imageService)
         {
             _movieAdapter = movieAdapter ??
                 throw new ArgumentNullException(nameof(movieAdapter));
-        }
 
+            _movieDetailsAdapter = movieDetailsAdapter ??
+                throw new ArgumentNullException(nameof(movieDetailsAdapter));
+
+            _imageService = imageService ??
+                throw new ArgumentNullException(nameof(imageService));
+
+            MovieImageDownloadQueue = new TaskQueue<Movie>(1, ProcessMovieImages);
+        }
+        
         #endregion
 
         #region Additional methods
 
         public async Task<IEnumerable<Movie>> GetMovies()
         {
-            string movies =
-                Globals.Instance.Host + $"/Users/{Globals.Instance.User.Id}/Items?IncludeItemTypes=Movie&Recursive=true&Fields=PrimaryImageAspectRatio%2CMediaSourceCount%2CBasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary%2CBackdrop%2CBanner%2CThumb&StartIndex=0&Limit=100000&ParentId=f137a2dd21bbc1b99aa5c0f6bf02a805";
-
             List<Movie> movieList = new List<Movie>();
 
             using (HttpClient cli = new HttpClient())
             {
                 cli.AddAuthorizationHeaders();
 
-                HttpResponseMessage result = await cli.GetAsync(movies);
+                HttpResponseMessage result = await cli.GetAsync(ListMoviesEndpoint);
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -60,11 +96,85 @@ namespace Jellyfin.Services
                 
                 foreach (Item item in resultSet.Items)
                 {
-                    movieList.Add(_movieAdapter.Convert(item));
+                    Movie movie = _movieAdapter.Convert(item);
+                    movieList.Add(movie);
+                    MovieImageDownloadQueue.EnqueueTask(movie);
                 }
             }
 
             return movieList;
+        }
+
+        public async Task<MovieDetail> GetMovieDetails(string movieId)
+        {
+            try
+            {
+                using (HttpClient cli = new HttpClient())
+                {
+                    cli.AddAuthorizationHeaders();
+
+                    HttpResponseMessage result = cli.GetAsync($"{GetMovieDetailsEndpoint}{movieId}").Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+
+                    string jsonResult = await result.Content.ReadAsStringAsync();
+
+                    MovieDetailsResult resultSet = JsonConvert.DeserializeObject<MovieDetailsResult>(jsonResult);
+
+                    var item = _movieDetailsAdapter.Convert(resultSet);
+                    MovieImageDownloadQueue.EnqueueTask(item);
+                    return item;
+                }
+            }
+            catch (Exception xc)
+            {
+                Debugger.Break();
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<Movie>> GetRelatedMovies(string movieId)
+        {
+            List<Movie> movieList = new List<Movie>();
+
+            using (HttpClient cli = new HttpClient())
+            {
+                cli.AddAuthorizationHeaders();
+
+                HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedMoviesEndpoint, movieId));
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return new List<Movie>();
+                }
+
+                string jsonResult = await result.Content.ReadAsStringAsync();
+
+                JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
+
+                foreach (Item item in resultSet.Items)
+                {
+                    Movie movie = _movieAdapter.Convert(item);
+                    movieList.Add(movie);
+                    MovieImageDownloadQueue.EnqueueTask(movie);
+                }
+            }
+
+            return movieList;
+        }
+
+        private void ProcessMovieImages(Movie movie)
+        {
+            if (!string.IsNullOrEmpty(movie.ImageId))
+            {
+                movie.ImageData =
+                    _imageService.GetImage(movie.Id, movie.ImageId).Result;
+                
+            }
         }
 
         #endregion

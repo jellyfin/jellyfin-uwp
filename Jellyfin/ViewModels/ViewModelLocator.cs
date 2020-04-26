@@ -36,7 +36,7 @@ namespace Jellyfin.ViewModels
             IJellyfinNavigationService navigationService = _container.Resolve<IJellyfinNavigationService>();
 
             _container.RegisterInstance(new MainViewModel());
-            _container.RegisterInstance(new MovieDetailViewModel());
+            _container.RegisterInstance(new MovieDetailViewModel(movieService));
             _container.RegisterInstance(new MovieListViewModel(movieService));
             _container.RegisterInstance(new MediaPlaybackViewModel());
             _container.RegisterInstance(new LoginViewModel(loginService, settingsService));

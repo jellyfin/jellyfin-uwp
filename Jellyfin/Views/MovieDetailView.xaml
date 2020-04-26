@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:uwp="using:FontAwesome.UWP"
+    xmlns:models="using:Jellyfin.Models"
     mc:Ignorable="d"
     PreviewKeyDown="MovieDetailView_OnPreviewKeyDown"
     DataContext="{Binding MovieDetailPage, Source={StaticResource ViewModelLocator}}"
@@ -16,41 +17,115 @@
             <GradientStop Color="#FF1f4f5f" Offset="1"/>
         </LinearGradientBrush>
     </Page.Background>
-    <Grid Margin="15, 150, 15, 15">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <ScrollViewer>
+        <Grid Margin="15, 150, 30, 200">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Image Grid.Column="0" Source="{Binding SelectedMovie.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top" />
-        
-        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0">
-                <TextBlock Text="{Binding SelectedMovie.Name}" FontSize="50" />
+            <Image Grid.Row="0" Grid.Column="0" Source="{Binding SelectedMovie.ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="500" Width="400" VerticalAlignment="Top">
+            </Image>
 
-                <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" />
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="{Binding SelectedMovie.Name}" FontSize="50" Margin="0, 0, 0, 20" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding SelectedMovie.Year}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" />
 
-                    <TextBlock Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding SelectedMovie.CommunityRating}" VerticalAlignment="Center" FontSize="{StaticResource FontL}" Margin="0, 0, 10, 4" />
+
+                            <uwp:FontAwesome Icon="Star" FontSize="{StaticResource FontM}" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedRuntime}" FontSize="{StaticResource FontL}" />
+
+                            <TextBlock Opacity=".7" Text="{Binding SelectedMovie.FormattedPlaybackRemaining}" FontSize="{StaticResource FontL}" />
+
+                            <Border Background="#333" Padding="40, 5" Margin="20, -5, 0, 0" CornerRadius="5">
+                                <TextBlock Text="{Binding SelectedMovie.OfficialRating}" FontSize="{StaticResource FontL}" FontWeight="Bold" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding SelectedMovie.FormattedGenres}" FontSize="{StaticResource FontL}" Margin="0, 0, 0, 10" Opacity=".7" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding SelectedMovie.Description}" TextWrapping="Wrap" FontSize="{StaticResource FontL}"
+                           Margin="0, 20, 0, 20" />
                 </StackPanel>
-                
-                <TextBlock Text="{Binding SelectedMovie.Rating}" FontSize="{StaticResource FontL}" />
-            </StackPanel>
 
-            <Button Grid.Row="1" Command="{Binding ToolCommand}" Width="80"  CommandParameter="Play"  Style="{StaticResource SelectableButton}">
-                <Button.Content>
-                    <uwp:FontAwesome Icon="Play" FontSize="35" HorizontalAlignment="Center" />
-                </Button.Content>
-            </Button>
+                <Button Grid.Row="2" Command="{Binding ToolCommand}" Width="80" 
+                FocusVisualPrimaryThickness="2" FocusVisualSecondaryThickness="0"
+                    FocusVisualSecondaryBrush="White" FocusVisualPrimaryBrush="Transparent"
+                CommandParameter="Play" Style="{StaticResource SelectableButton}" Padding="0, 5, 0, 5">
+                    <Button.Content>
+                        <Image Grid.Row="3" Source="../Assets/Images/play-button.png" Width="30" Height="30" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <!-- Related movies Grid -->
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+              Margin="15, 100, 30, 15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="RELATED MOVIES" FontSize="32" FontWeight="SemiBold" Margin="15, 0, 0, 20" />
+
+                <ListView Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollMode="Enabled"                  
+                      ScrollViewer.VerticalScrollMode="Disabled"
+                      ItemsSource="{Binding RelatedMovies}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Background="Transparent" Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Movie">
+                            <Button>
+                                <Button.Content>
+                                    <StackPanel Orientation="Vertical" Margin="0, 0, 15, 25" Height="400" Width="250">
+                                        <Image Source="{Binding ImageData, Converter={StaticResource ByteArrayToImageConverter}}" Height="300" Width="250" />
+                                        <TextBlock Text="{x:Bind Name}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{x:Bind Year}" FontSize="30" Foreground="White" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </Page>
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Jellyfin.Models;
+﻿using System.Threading.Tasks;
 
 namespace Jellyfin.Services.Interfaces
 {
@@ -9,6 +7,6 @@ namespace Jellyfin.Services.Interfaces
     /// </summary>
     public interface IImageService
     {
-        Task GetImage(Movie movie);
+        Task<byte[]> GetImage(string id, string imageId);
     }
 }
