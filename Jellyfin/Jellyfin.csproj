@@ -154,6 +154,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\IJellyfinNavigationService.cs" />
     <Compile Include="Services\JellyfinNavigationService.cs" />
+    <Compile Include="UserControls\PlaybackMenu.xaml.cs">
+      <DependentUpon>PlaybackMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="ViewModels\JellyfinViewModelBase.cs" />
@@ -257,6 +260,10 @@
     <Page Include="Resources\JellyfinStyleResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\PlaybackMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MediaPlaybackView.xaml">
       <Generator>MSBuild:Compile</Generator>
