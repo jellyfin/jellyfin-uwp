@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.System;
 using Jellyfin.Models;
@@ -22,6 +23,22 @@ namespace Jellyfin.ViewModels
             {
                 _selectedMovie = value;
                 RaisePropertyChanged(nameof(SelectedMovie));
+            }
+        }
+
+        #endregion
+
+        #region RelatedMovies
+
+        private ObservableCollection<Movie> _relatedMovies = new ObservableCollection<Movie>();
+
+        public ObservableCollection<Movie> RelatedMovies
+        {
+            get { return _relatedMovies; }
+            set
+            {
+                _relatedMovies = value;
+                RaisePropertyChanged(nameof(RelatedMovies));
             }
         }
 
@@ -61,7 +78,13 @@ namespace Jellyfin.ViewModels
 
         public async Task GetMovieDetails(Movie movie)
         {
+            RelatedMovies.Clear();
             SelectedMovie = await _movieService.GetMovieDetails(movie.Id);
+
+            foreach (Movie relatedMovie in await _movieService.GetRelatedMovies(movie.Id))
+            {
+                RelatedMovies.Add(relatedMovie);
+            }
         }
 
         private void Play()

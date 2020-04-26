@@ -1,7 +1,8 @@
-﻿using Jellyfin.Models;
+﻿using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Jellyfin.Models;
 using Jellyfin.Services.Interfaces;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Unity;
 
 namespace Jellyfin.Core
@@ -75,6 +76,11 @@ namespace Jellyfin.Core
         public Sessioninfo SessionInfo { get; set; }
 
         public User User { get; set; }
+
+        public CoreDispatcher UIDispatcher
+        {
+            get => CoreApplication.MainView.CoreWindow.Dispatcher;
+        }
 
         #endregion
 

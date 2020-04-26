@@ -33,6 +33,11 @@ namespace Jellyfin.Services
             get => $"{Globals.Instance.Host}/Users/{Globals.Instance.User.Id}/Items/";
         }
 
+        public string GetRelatedMoviesEndpoint
+        {
+            get => $"{Globals.Instance.Host}/Items/{{0}}/Similar?userId={Globals.Instance.User.Id}&limit=12&fields=PrimaryImageAspectRatio";
+        }
+
         /// <summary>
         /// Reference for the movie adapter.
         /// </summary>
@@ -132,12 +137,43 @@ namespace Jellyfin.Services
             return null;
         }
 
+        public async Task<IEnumerable<Movie>> GetRelatedMovies(string movieId)
+        {
+            List<Movie> movieList = new List<Movie>();
+
+            using (HttpClient cli = new HttpClient())
+            {
+                cli.AddAuthorizationHeaders();
+
+                HttpResponseMessage result = await cli.GetAsync(string.Format(GetRelatedMoviesEndpoint, movieId));
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return new List<Movie>();
+                }
+
+                string jsonResult = await result.Content.ReadAsStringAsync();
+
+                JellyfinMovieResult resultSet = JsonConvert.DeserializeObject<JellyfinMovieResult>(jsonResult);
+
+                foreach (Item item in resultSet.Items)
+                {
+                    Movie movie = _movieAdapter.Convert(item);
+                    movieList.Add(movie);
+                    MovieImageDownloadQueue.EnqueueTask(movie);
+                }
+            }
+
+            return movieList;
+        }
+
         private void ProcessMovieImages(Movie movie)
         {
             if (!string.IsNullOrEmpty(movie.ImageId))
             {
                 movie.ImageData =
                     _imageService.GetImage(movie.Id, movie.ImageId).Result;
+                
             }
         }
 

@@ -1,11 +1,13 @@
 ﻿using System;
+using Windows.UI.Core;
+using Jellyfin.Core;
 
 namespace Jellyfin.Models
 {
     /// <summary>
     /// Movie model representation
     /// </summary>
-    public class Movie
+    public class Movie : ModelBase
     {
         #region Properties
 
@@ -19,10 +21,30 @@ namespace Jellyfin.Models
         /// </summary>
         public string ImageId { get; set; }
 
+        
+        #region ToolCommand
+
+        private byte[] _imageData;
+
         /// <summary>
         /// The byte array of the downloaded data of the image.
         /// </summary>
-        public byte[] ImageData { get; set; }
+        public byte[] ImageData
+        {
+            get { return _imageData; }
+            set
+            {
+                _imageData = value;
+                Globals.Instance.UIDispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        RaisePropertyChanged(nameof(ImageData));
+                    });
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// The title of the movie.
@@ -110,6 +132,11 @@ namespace Jellyfin.Models
         /// The genres of the movie.
         /// </summary>
         public string[] Genres { get; set; }
+
+        public string FormattedGenres
+        {
+            get => string.Join(", ", Genres);
+        }
 
         /// <summary>
         /// The "overview" of the movie

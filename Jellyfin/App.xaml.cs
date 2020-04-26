@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -32,6 +33,13 @@ namespace Jellyfin
             Suspending += OnSuspending;
 
             UnityRegistration.RegisterTypes();
+
+            // Activate Reveal Focus.
+            // See https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal-focus
+            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox")
+            {
+                FocusVisualKind = FocusVisualKind.Reveal;
+            }
         }
 
         /// <summary>
