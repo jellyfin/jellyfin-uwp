@@ -46,13 +46,24 @@ namespace Jellyfin.Views
             btnConnect.IsEnabled = false;
             txtError.Visibility = Visibility.Collapsed;
 
-            if (!await CheckURLValidAsync(txtUrl.Text))
+            string uriString = txtUrl.Text;
+            try
+            {
+                var ub = new UriBuilder(uriString);
+                uriString = ub.ToString();
+            }
+            finally
+            {
+                ; //If the UriBuilder fails the following functions will handle the error
+            }
+
+            if (!await CheckURLValidAsync(uriString))
             {
                 txtError.Visibility = Visibility.Visible;
             }
             else
             {
-                Central.Settings.JellyfinServer = txtUrl.Text;
+                Central.Settings.JellyfinServer = uriString;
                 (Window.Current.Content as Frame).Navigate(typeof(MainPage));
             }
 
@@ -98,10 +109,14 @@ namespace Jellyfin.Views
                 return false;
             }
 
-            // also do a check that url points to Jellyfin web client
-            if (!response.Headers.ToString().Contains("Emby"))
+            var encoding = System.Text.Encoding.GetEncoding(response.CharacterSet);
+            using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding))
             {
-                return false;
+                string responseText = reader.ReadToEnd();
+                if (!responseText.Contains("Jellyfin"))
+                {
+                    return false;
+                }
             }
 
             return true;
