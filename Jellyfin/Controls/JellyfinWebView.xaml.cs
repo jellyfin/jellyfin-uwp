@@ -58,7 +58,7 @@ namespace Jellyfin.Controls
 
         private async void JellyfinWebView_NavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            await WView.InvokeScriptAsync("eval", new string[] { "navigator.gamepadInputEmulation = 'gamepad';" });
+            await WView.InvokeScriptAsync("eval", new string[] { "navigator.gamepadInputEmulation = 'mouse';" });
         }
 
         private void JellyfinWebView_ContainsFullScreenElementChanged(Windows.UI.Xaml.Controls.WebView sender, object args)

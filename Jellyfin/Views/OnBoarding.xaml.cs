@@ -82,15 +82,8 @@ namespace Jellyfin.Views
             {
                 return false;
             }
-
-            Uri testUri = new Uri(uriString);
-
-            // check scheme
-            if (testUri.Scheme != "http" && testUri.Scheme != "https")
-            {                
-                return false;
-            }
-
+            //add scheme to uri if not included 
+            Uri testUri = new UriBuilder(uriString).Uri;
             // check URL exists
             HttpWebRequest request;
             HttpWebResponse response;
