@@ -47,7 +47,7 @@
                 <TextBlock FontFamily="{StaticResource JellyfinFamilyFont}"                            
                            Text="ex: 192.168.1.100:8096 or https://myserver.com. The protocol 'http://' and 'https://' will be automatically added." 
                            Foreground="{StaticResource Color90}" FontSize="{StaticResource FontS}"
-                           Margin="0 0 0 28 "/>
+                           Margin="0 0 0 28 " Height="121" TextWrapping="WrapWholeWords" TextAlignment="Center"/>
                 <TextBlock 
                            x:Name="txtError"
                            FontFamily="{StaticResource JellyfinFamilyFont}"
