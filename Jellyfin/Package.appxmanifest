@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="20468Jellyfin.Jellyfin"
+    Name="Jellyfin.Jellyfin"
     Publisher="CN=3D3639CB-31B4-4125-B529-F73741781F84"
-    Version="0.8.0.0" />
+    Version="0.8.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72ea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="379a70b2-c1a4-4726-91a7-afcf43ba35e3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Jellyfin</DisplayName>
@@ -38,7 +38,7 @@
         Description="Jellyfin"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#101010" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#101010"/>
       </uap:VisualElements>
     </Application>
   </Applications>
