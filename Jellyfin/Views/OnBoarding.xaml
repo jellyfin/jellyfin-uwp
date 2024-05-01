@@ -39,15 +39,11 @@
             <StackPanel x:Name="pnlMain" HorizontalAlignment="Center" VerticalAlignment="Top" Width="640">
                 <TextBlock         
                            x:Name="txtTitle"
-                           Text="Connect to Server" Foreground="White" FontSize="{StaticResource FontL}" Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}" />
-                <TextBlock FontFamily="{StaticResource JellyfinFamilyFont}"                            
-                           Text="Host:" 
-                           Foreground="{StaticResource Color100}" FontSize="{StaticResource FontM}" />
-                <TextBox x:Name="txtUrl" Style="{StaticResource PrimaryTextBox}" Margin="0 8 0 8" />
-                <TextBlock FontFamily="{StaticResource JellyfinFamilyFont}"                            
-                           Text="ex: 192.168.1.100:8096 or https://myserver.com. The protocol 'http://' and 'https://' will be automatically added." 
-                           Foreground="{StaticResource Color90}" FontSize="{StaticResource FontS}"
-                           Margin="0 0 0 28 "/>
+                           Text="Connect to Jellyfin Server" Foreground="White" FontSize="{StaticResource FontL}" Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}" HorizontalAlignment="Center" />
+                <TextBox x:Name="txtUrl" 
+         Style="{StaticResource PrimaryTextBox}" 
+         Margin="0 8 0 8"
+         PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org"/>
                 <TextBlock 
                            x:Name="txtError"
                            FontFamily="{StaticResource JellyfinFamilyFont}"
@@ -57,7 +53,7 @@
                            TextWrapping="Wrap"
                            Visibility="Collapsed"
                            FontSize="{StaticResource FontM}"
-                           Margin="0 -16 0 20"
+                           Margin="1 1 1 20"
                            Foreground="#CF4A4A" />
 
                 <Button x:Name="btnConnect" Style="{StaticResource PrimaryButton}" Content="Connect"  />

@@ -82,8 +82,10 @@ namespace Jellyfin.Views
             {
                 return false;
             }
+
             //add scheme to uri if not included 
             Uri testUri = new UriBuilder(uriString).Uri;
+
             // check URL exists
             HttpWebRequest request;
             HttpWebResponse response;
@@ -92,9 +94,33 @@ namespace Jellyfin.Views
                 request = (HttpWebRequest)WebRequest.Create(testUri);
                 response = (HttpWebResponse)(await request.GetResponseAsync());
             }
-            catch (Exception)
+            catch (WebException ex)
             {
-                return false;
+                // Handle web exceptions here
+                if (ex.Response != null && ex.Response is HttpWebResponse errorResponse)
+                {
+                    int statusCode = (int)errorResponse.StatusCode;
+                    if (statusCode >= 300 && statusCode <= 308)
+                    {
+                        // Handle Redirect
+                        string newLocation = errorResponse.Headers["Location"];
+                        if (!string.IsNullOrEmpty(newLocation))
+                        {
+                            uriString = newLocation;
+                            return await CheckURLValidAsync(uriString); // Recursively check the new location
+                        }
+                    }
+                    else
+                    {
+                        UpdateErrorMessage(statusCode);
+                    }
+                    return false;
+                }
+                else
+                {
+                    // Handle other exceptions
+                    return false;
+                }
             }
 
             if (response == null || response.StatusCode != HttpStatusCode.OK)
@@ -112,7 +138,17 @@ namespace Jellyfin.Views
                 }
             }
 
+            // If everything is OK, update the URI before saving it
+            Central.Settings.JellyfinServer = uriString;
+
             return true;
+        }
+
+
+        private void UpdateErrorMessage(int statusCode)
+        {
+            txtError.Visibility = Visibility.Visible;
+            txtError.Text = $"Error: {statusCode}";
         }
     }
 }
