@@ -7,6 +7,8 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Jellyfin
 {
@@ -16,6 +18,31 @@ namespace Jellyfin
         {
             InitializeComponent();
             Suspending += OnSuspending;
+
+            SetWebview2EnvironmentVariables();
+        }
+        private void SetWebview2EnvironmentVariables()
+        {
+            SetWebview2AdditionalBrowserArguments();
+        }
+
+        private void SetWebview2AdditionalBrowserArguments()
+        {
+            List<string> webview2AdditionalBrowserArguments = new List<string>();
+
+            // No sound plays when this is enabled on Xbox
+            if (AppUtils.GetDeviceFormFactorType() == DeviceFormFactorType.Desktop)
+            {
+                // Enables HTMLMediaElement.audioTracks.
+                // If Edge Webview2 removes audioTracks it's fine as 'jellyfin-web' won't detect it
+                webview2AdditionalBrowserArguments.Add("--enable-experimental-web-platform-features");
+            }
+
+            if (webview2AdditionalBrowserArguments.Any())
+            {
+                Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS",
+                    string.Join(" ", webview2AdditionalBrowserArguments));
+            }
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
