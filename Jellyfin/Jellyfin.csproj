@@ -133,6 +133,9 @@
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Central.cs" />
+    <Compile Include="Core\FullScreenManager.cs" />
+    <Compile Include="Core\MessageHandler.cs" />
+    <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -142,6 +145,9 @@
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +204,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Fonts\NotoSans-Regular.ttf" />
+    <Content Include="Resources\redirectlogs.js" />
+    <Content Include="Resources\winuwp.js" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -231,6 +239,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Settings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
@@ -242,6 +254,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Jellyfin_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Component\Jellyfin-component.csproj">
+      <Project>{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}</Project>
+      <Name>Jellyfin-component</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
 </Project>

@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{A497F636-B20
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin-component", "Component\Jellyfin-component.csproj", "{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -46,6 +48,22 @@ Global
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x86.ActiveCfg = Release|x86
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x86.Build.0 = Release|x86
 		{9BA6E54B-B71A-4C79-8D15-F6C3335432E9}.Release|x86.Deploy.0 = Release|x86
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|ARM.ActiveCfg = Debug|ARM
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|ARM.Build.0 = Debug|ARM
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|ARM64.Build.0 = Debug|ARM64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|x64.ActiveCfg = Debug|x64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|x64.Build.0 = Debug|x64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|x86.ActiveCfg = Debug|x86
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Debug|x86.Build.0 = Debug|x86
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|ARM.ActiveCfg = Release|ARM
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|ARM.Build.0 = Release|ARM
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|ARM64.ActiveCfg = Release|ARM64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|ARM64.Build.0 = Release|ARM64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|x64.ActiveCfg = Release|x64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|x64.Build.0 = Release|x64
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|x86.ActiveCfg = Release|x86
+		{95412C4F-BAE5-4EF1-9D43-3E7FEBC16EAE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

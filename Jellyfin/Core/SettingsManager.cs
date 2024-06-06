@@ -11,6 +11,8 @@ namespace Jellyfin.Core
     {
         string CONTAINER_SETTINGS = "APPSETTINGS";
         string SETTING_SERVER = "SERVER";
+        string AUTO_RESOLUTION = "AUTO_RESOLUTION";
+        string AUTO_REFRESH_RATE = "AUTO_REFRESH_RATE";
 
         private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
         private ApplicationDataContainer ContainerSettings
@@ -31,6 +33,18 @@ namespace Jellyfin.Core
         {
             get => GetProperty<String>(SETTING_SERVER);
             set => SetProperty(SETTING_SERVER, value);
+        }
+
+        public bool AutoResolution
+        {
+            get => GetProperty<bool>(AUTO_RESOLUTION);
+            set => SetProperty(AUTO_RESOLUTION, value);
+        }
+
+        public bool AutoRefreshRate
+        {
+            get => GetProperty<bool>(AUTO_REFRESH_RATE);
+            set => SetProperty(AUTO_REFRESH_RATE, value);
         }
 
         private void SetProperty(String propertyName, object value)

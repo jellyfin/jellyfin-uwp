@@ -1,22 +1,16 @@
-﻿using Jellyfin.Core;
+﻿using Jellyfin.Component;
+using Jellyfin.Core;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using Windows.Graphics.Display.Core;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.WebUI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -28,12 +22,24 @@ namespace Jellyfin.Controls
         {
             this.InitializeComponent();
 
-            WView.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+            WView.NavigationStarting += JellyfinWebView_NavigationStarting;
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             WView.NavigationFailed += WView_NavigationFailed;
 
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
-            this.Loaded += JellyfinWebView_Loaded;            
+            this.Loaded += JellyfinWebView_Loaded;
+
+            HdmiDisplayInformation hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+            if (hdmiDisplayInformation != null)
+            {
+                hdmiDisplayInformation.DisplayModesChanged += OnDisplayModeChanged;
+            }
+        }
+        private void JellyfinWebView_NavigationStarting(object sender, WebViewNavigationStartingEventArgs e)
+        {
+            MessageHandler messageHandler = new MessageHandler(Window.Current.Content as Frame);
+            WebViewBridge webViewBridge = new WebViewBridge(messageHandler);
+            WView.AddWebAllowedObject("WebViewBridge", webViewBridge);
         }
 
         private async void WView_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
@@ -56,27 +62,54 @@ namespace Jellyfin.Controls
             e.Handled = true;
         }
 
+        private async Task RedirectLogs()
+        {
+            Uri uri = new Uri("ms-appx:///Resources/redirectlogs.js");
+            StorageFile storageFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            string redirectLogsJs = await FileIO.ReadTextAsync(storageFile);
+            await WView.InvokeScriptAsync("eval", new string[] { redirectLogsJs });
+        }
+
         private async void JellyfinWebView_NavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationCompletedEventArgs args)
         {
+            if (Debugger.IsAttached)
+            {
+                try
+                {
+                    await RedirectLogs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Failed to Redirect WebView Logs", ex);
+                }
+            }
+
+            await InjectNativeShellScript();
+
             await WView.InvokeScriptAsync("eval", new string[] { "navigator.gamepadInputEmulation = 'mouse';" });
         }
 
-        private void JellyfinWebView_ContainsFullScreenElementChanged(Windows.UI.Xaml.Controls.WebView sender, object args)
+        private async Task InjectNativeShellScript()
         {
-            ApplicationView appView = ApplicationView.GetForCurrentView();
-
-            if (sender.ContainsFullScreenElement)
+            string nativeShellScript = await NativeShellScriptLoader.LoadNativeShellScript();
+            try
             {
-                appView.TryEnterFullScreenMode();
-                return;
+                await WView.InvokeScriptAsync("eval", new string[] { nativeShellScript });
+                Debug.WriteLine("Injected nativeShellScript");
             }
-
-            if (!appView.IsFullScreenMode)
+            catch (Exception ex)
             {
-                return;
+                Debug.WriteLine("Failed to add NativeShell JS", ex);
             }
+        }
 
-            appView.ExitFullScreenMode();
+        private async void OnDisplayModeChanged(HdmiDisplayInformation sender, object args)
+        {
+            await WView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                Debug.WriteLine("Display mode has changed.");
+                await InjectNativeShellScript();
+            });
         }
     }
 }
