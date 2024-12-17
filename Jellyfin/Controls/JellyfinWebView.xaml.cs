@@ -2,9 +2,12 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
+using System.Collections.Generic;
+using Windows.Gaming.Input;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -13,6 +16,10 @@ namespace Jellyfin.Controls
 {
     public sealed partial class JellyfinWebView : UserControl
     {
+        private List<Gamepad> _connectedGamepads = new List<Gamepad>();
+        private DispatcherTimer _timer;
+        private bool _isGoingBack; // used to make the back button latching
+        
         public JellyfinWebView()
         {
             this.InitializeComponent();
@@ -22,6 +29,51 @@ namespace Jellyfin.Controls
             WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
+            
+            Gamepad.GamepadAdded += GamepadOnGamepadAdded;
+            Gamepad.GamepadRemoved += GamepadOnGamepadRemoved;
+            
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(10);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }
+        
+        private void GamepadOnGamepadRemoved(object sender, Gamepad e)
+        {
+            _connectedGamepads.Remove(e);
+        }
+
+        private void GamepadOnGamepadAdded(object sender, Gamepad e)
+        {
+            if (!_connectedGamepads.Contains(e))
+            {
+                _connectedGamepads.Add(e);
+            }        
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            foreach (var gamepad in _connectedGamepads)
+            {
+                GamepadReading reading = gamepad.GetCurrentReading();
+
+                if ((reading.Buttons & GamepadButtons.B) == GamepadButtons.B && !_isGoingBack)
+                {
+                    // todo - make latching (require reset before going back a second time)
+                    // Handle B button pressed
+                    if (WView.CanGoBack)
+                    {
+                        WView.GoBack();
+                        _isGoingBack = true;
+                    }
+                }
+
+                if ((reading.Buttons & GamepadButtons.B) != GamepadButtons.B)
+                {
+                    _isGoingBack = false;
+                }
+            }
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
