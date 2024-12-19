@@ -18,7 +18,7 @@ namespace Jellyfin.Controls
     {
         private List<Gamepad> _connectedGamepads = new List<Gamepad>();
         private DispatcherTimer _timer;
-        private bool _isGoingBack; // used to make the back button latching
+        private bool _wasBPressed; // used to make the back button latching
         
         public JellyfinWebView()
         {
@@ -58,20 +58,19 @@ namespace Jellyfin.Controls
             {
                 GamepadReading reading = gamepad.GetCurrentReading();
 
-                if ((reading.Buttons & GamepadButtons.B) == GamepadButtons.B && !_isGoingBack)
+                if ((reading.Buttons & GamepadButtons.B) == GamepadButtons.B && !_wasBPressed)
                 {
-                    // todo - make latching (require reset before going back a second time)
                     // Handle B button pressed
                     if (WView.CanGoBack)
                     {
                         WView.GoBack();
-                        _isGoingBack = true;
+                        _wasBPressed = true;
                     }
                 }
 
                 if ((reading.Buttons & GamepadButtons.B) != GamepadButtons.B)
                 {
-                    _isGoingBack = false;
+                    _wasBPressed = false;
                 }
             }
         }
