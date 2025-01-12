@@ -30,29 +30,16 @@ namespace Jellyfin.Controls
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
             
-            Gamepad.GamepadAdded += GamepadOnGamepadAdded;
-            Gamepad.GamepadRemoved += GamepadOnGamepadRemoved;
+            Gamepad.GamepadAdded += (object sender, Gamepad e) => {if (!_connectedGamepads.Contains(e)) _connectedGamepads.Add(e); };
+            Gamepad.GamepadRemoved += (object sender, Gamepad e) => { _connectedGamepads.Remove(e); };
             
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(10);
-            _timer.Tick += Timer_Tick;
+            _timer.Tick += GamepadPollingTimer_Tick;
             _timer.Start();
         }
-        
-        private void GamepadOnGamepadRemoved(object sender, Gamepad e)
-        {
-            _connectedGamepads.Remove(e);
-        }
 
-        private void GamepadOnGamepadAdded(object sender, Gamepad e)
-        {
-            if (!_connectedGamepads.Contains(e))
-            {
-                _connectedGamepads.Add(e);
-            }        
-        }
-
-        private void Timer_Tick(object sender, object e)
+        private void GamepadPollingTimer_Tick(object sender, object e)
         {
             foreach (var gamepad in _connectedGamepads)
             {
