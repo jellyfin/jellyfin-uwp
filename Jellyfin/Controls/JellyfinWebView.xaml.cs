@@ -17,7 +17,7 @@ namespace Jellyfin.Controls
     public sealed partial class JellyfinWebView : UserControl
     {
         private List<Gamepad> _connectedGamepads = new List<Gamepad>();
-        private DispatcherTimer _timer;
+        private readonly DispatcherTimer _gamepadPollingtimer;
         private bool _wasBPressed; // used to make the back button latching
         
         public JellyfinWebView()
@@ -32,11 +32,11 @@ namespace Jellyfin.Controls
             
             Gamepad.GamepadAdded += (object sender, Gamepad e) => {if (!_connectedGamepads.Contains(e)) _connectedGamepads.Add(e); };
             Gamepad.GamepadRemoved += (object sender, Gamepad e) => { _connectedGamepads.Remove(e); };
-            
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(10);
-            _timer.Tick += GamepadPollingTimer_Tick;
-            _timer.Start();
+
+            _gamepadPollingtimer = new DispatcherTimer();
+            _gamepadPollingtimer.Interval = TimeSpan.FromMilliseconds(10);
+            _gamepadPollingtimer.Tick += GamepadPollingTimer_Tick;
+            _gamepadPollingtimer.Start();
         }
 
         private void GamepadPollingTimer_Tick(object sender, object e)
