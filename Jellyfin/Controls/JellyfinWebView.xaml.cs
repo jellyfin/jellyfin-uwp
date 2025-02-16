@@ -1,35 +1,23 @@
 ﻿using Jellyfin.Core;
+using Jellyfin.Utils;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.Gaming.Input;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.System;
-using Windows.System.Threading; // Ensure correct DispatcherPriority usage
 
 namespace Jellyfin.Controls
 {
     public sealed partial class JellyfinWebView : UserControl, IDisposable
     {
-        private List<Gamepad> _connectedGamepads = new List<Gamepad>();
-        private readonly DispatcherTimer _gamepadPollingTimer;
-        private bool _wasBPressed;
-        private readonly Stopwatch _buttonTimer = new Stopwatch();
-        private const int ButtonPressCooldownMs = 250; // Time-based button press handling
-        private readonly DispatcherQueue _dispatcherQueue;
+        private readonly GamepadManager _gamepadManager;
 
         public JellyfinWebView()
         {
             this.InitializeComponent();
-
-            // Get current DispatcherQueue for UI thread access
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // Set WebView source
             WView.Source = new Uri(Central.Settings.JellyfinServer);
@@ -38,57 +26,16 @@ namespace Jellyfin.Controls
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
 
-            // Handle Gamepad events
-            Gamepad.GamepadAdded += (sender, e) => { if (!_connectedGamepads.Contains(e)) _connectedGamepads.Add(e); };
-            Gamepad.GamepadRemoved += (sender, e) => { _connectedGamepads.Remove(e); };
-
-            var ss = new DispatcherTimer();
-
-            // Initialize and start DispatcherTimer
-            _gamepadPollingTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(10),
-            };
-            _gamepadPollingTimer.Tick += GamepadPollingTimer_Tick;
-            _gamepadPollingTimer.Start();
-
-            _buttonTimer.Start(); // Start timing button presses
+            // Initialize GamepadManager
+            _gamepadManager = new GamepadManager();
+            _gamepadManager.OnBackPressed += HandleGamepadBackPress;
         }
 
-        private void GamepadPollingTimer_Tick(object sender, object e)
+        private void HandleGamepadBackPress()
         {
-            if (_dispatcherQueue.HasThreadAccess)
+            if (WView.CanGoBack)
             {
-                ProcessGamepadInput();
-            }
-            else
-            {
-                _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.High, ProcessGamepadInput);
-            }
-        }
-
-        private void ProcessGamepadInput()
-        {
-            foreach (var gamepad in _connectedGamepads)
-            {
-                GamepadReading reading = gamepad.GetCurrentReading();
-
-                bool isBPressed = (reading.Buttons & GamepadButtons.B) == GamepadButtons.B;
-
-                // Ensure time-based button press detection
-                if (isBPressed && !_wasBPressed && _buttonTimer.ElapsedMilliseconds >= ButtonPressCooldownMs)
-                {
-                    if (WView.CanGoBack)
-                    {
-                        WView.GoBack();
-                    }
-                    _wasBPressed = true;
-                    _buttonTimer.Restart(); // Reset cooldown timer
-                }
-                else if (!isBPressed)
-                {
-                    _wasBPressed = false;
-                }
+                WView.GoBack();
             }
         }
 
@@ -110,7 +57,6 @@ namespace Jellyfin.Controls
         {
             if (!args.IsSuccess)
             {
-                // Handle a navigation failure to the server
                 CoreWebView2WebErrorStatus errorStatus = args.WebErrorStatus;
                 MessageDialog md = new MessageDialog($"Navigation failed: {errorStatus}");
                 await md.ShowAsync();
@@ -135,14 +81,9 @@ namespace Jellyfin.Controls
             }
         }
 
-        // Dispose method to clean up resources
         public void Dispose()
         {
-            if (_gamepadPollingTimer != null)
-            {
-                _gamepadPollingTimer.Stop();
-                _gamepadPollingTimer.Tick -= GamepadPollingTimer_Tick;
-            }
+            _gamepadManager?.Dispose();
         }
     }
 }
