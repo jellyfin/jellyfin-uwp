@@ -238,10 +238,10 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.6</Version>
+      <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.2903.40</Version>
+      <Version>1.0.3124.44</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
