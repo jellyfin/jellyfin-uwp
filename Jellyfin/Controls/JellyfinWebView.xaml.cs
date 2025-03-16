@@ -1,27 +1,42 @@
 ﻿using Jellyfin.Core;
+using Jellyfin.Utils;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Jellyfin.Controls
 {
-    public sealed partial class JellyfinWebView : UserControl
+    public sealed partial class JellyfinWebView : UserControl, IDisposable
     {
+        private readonly GamepadManager _gamepadManager;
+
         public JellyfinWebView()
         {
             this.InitializeComponent();
-            // Kicks off the CoreWebView2 creation
+
+            // Set WebView source
             WView.Source = new Uri(Central.Settings.JellyfinServer);
 
             WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
+
+            // Initialize GamepadManager
+            _gamepadManager = new GamepadManager();
+            _gamepadManager.OnBackPressed += HandleGamepadBackPress;
+        }
+
+        private void HandleGamepadBackPress()
+        {
+            if (WView.CanGoBack)
+            {
+                WView.GoBack();
+            }
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
@@ -42,10 +57,8 @@ namespace Jellyfin.Controls
         {
             if (!args.IsSuccess)
             {
-                // Handle a navigation failure to the server
                 CoreWebView2WebErrorStatus errorStatus = args.WebErrorStatus;
-                // Log the error or show an error page
-                MessageDialog md = new MessageDialog($"Navigation failed {errorStatus}");
+                MessageDialog md = new MessageDialog($"Navigation failed: {errorStatus}");
                 await md.ShowAsync();
             }
 
@@ -62,12 +75,15 @@ namespace Jellyfin.Controls
                 return;
             }
 
-            if (!appView.IsFullScreenMode)
+            if (appView.IsFullScreenMode)
             {
-                return;
+                appView.ExitFullScreenMode();
             }
+        }
 
-            appView.ExitFullScreenMode();
+        public void Dispose()
+        {
+            _gamepadManager?.Dispose();
         }
     }
 }
