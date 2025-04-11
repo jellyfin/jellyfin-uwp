@@ -52,9 +52,9 @@ namespace Jellyfin.Views
                 var ub = new UriBuilder(uriString);
                 uriString = ub.ToString();
             }
-            finally
+            catch
             {
-                ; //If the UriBuilder fails the following functions will handle the error
+                //If the UriBuilder fails the following functions will handle the error
             }
 
             if (!await CheckURLValidAsync(uriString))
