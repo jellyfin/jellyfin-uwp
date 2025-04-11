@@ -1,0 +1,162 @@
+name: Issue Report
+description: File an issue report
+labels: [bug]
+body:
+  - type: markdown
+    id: introduction
+    attributes:
+      value: |
+        ### Thank you for taking the time to report an issue!
+        Please keep in mind that Jellyfin is a [free and open-source](https://jellyfin.org/docs/general/about) project, made up entirely and exclusively of **volunteers** who donate their free time to the project.
+  - type: checkboxes
+    id: before-posting
+    attributes:
+      label: "This issue respects the following points:"
+      description: All conditions are **required**. Failure to comply with any of these conditions may cause your issue to be closed without comment.
+      options:
+        - label: This is a **bug**, not a question or a configuration issue; Please visit our [forum or chat rooms](https://jellyfin.org/contact/) first to troubleshoot with volunteers, before creating a report.
+          required: true
+        - label: This issue is **not** already reported on [GitHub](https://github.com/jellyfin/jellyfin-uwp/issues?q=is%3Aopen+is%3Aissue) _(I've searched it)_.
+          required: true
+        - label: I'm using an up to date version of Jellyfin UWP and Jellyfin Server, unstable or master; We generally do not support previous older versions. If possible, please update to the latest version before opening an issue.
+          required: true
+        - label: I agree to follow Jellyfin's [Code of Conduct](https://jellyfin.org/docs/general/community-standards.html#code-of-conduct).
+          required: true
+        - label: This report addresses only a single issue; If you encounter multiple issues, kindly create separate reports for each one.
+          required: true
+  - type: markdown
+    id: preliminary-information
+    attributes:
+      value: |
+        ### General preliminary information
+
+        Please keep the following in mind when creating this issue:
+
+        1. Fill in as much of the template as possible. When you are unsure about the relevancy of a section, do include the information requested in that section. Only leave out information in sections when you are completely sure about it not being relevant.
+        2. Provide as much detail as possible. Do not assume other people to know what is going on.
+        3. Keep everything readable and structured. Nobody enjoys reading poorly written reports that are difficult to understand.
+        4. Keep an eye on your report as long as it is open, your involvement might be requested at a later moment.
+        5. Keep the title short and descriptive. The title is not the place to write down a full description of the issue.
+        6. When deciding to leave out information in a field, leave it blank and empty. Avoid writing things such as `n/a` for empty fields.
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Description of the bug
+      description: Please provide a detailed description on the bug you encountered, in a readable and comprehensible way.
+      placeholder: |
+        After upgrading to version x.y.z of Jellyfin UWP, I observed that x occurs instead of the expected y. I have attempted actions x, y, and z to resolve the issue, but the problem persists.
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Reproduction steps
+      description: Reproduction steps should be complete and self-contained. Anyone can reproduce this issue by following these steps. Furthermore, the steps should be clear and easy to follow.
+      placeholder: |
+        1. Open the Jellyfin UWP client and log in.
+        2. Attempt to play a movie.
+        3. Observe if the media loads and starts playing.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: What is the current _bug_ behavior?
+      description: Write down the incorrect behavior that currently happens after following the reproduction steps.
+      placeholder: |
+        The media does not load and the app crashes.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What is the expected _correct_ behavior?
+      description: Write down the correct expected behavior that is supposed to happen after following the reproduction steps.
+      placeholder: |
+        The media loads and starts playing.
+    validations:
+      required: true
+  - type: dropdown
+    id: version-uwp
+    attributes:
+      label: Jellyfin UWP version
+      description: What version of Jellyfin UWP are you using?
+      options:
+        - 0.9.0+
+        - Master
+    validations:
+      required: true
+  - type: input
+    id: version-uwp-master
+    attributes:
+      label: "Specify commit id"
+      description: Fill in this field in case the option 'master' is selected. Provide the commit id it was built on.
+      placeholder: |
+        610e56baafc3011e1bfa043bdabb567bda0c2ab0
+  - type: dropdown
+    id: version-jellyfin-server
+    attributes:
+      label: Jellyfin Server version
+      description: What version of Jellyfin Server are you using?
+      options:
+        - 10.10.7+
+        - Master
+        - Unstable
+    validations:
+      required: true
+  - type: input
+    id: version-jellyfin-master
+    attributes:
+      label: "Specify commit id"
+      description: Fill in this field in case the option 'master' is selected. Provide the commit id it was built on.
+      placeholder: |
+        610e56baafc3011e1bfa043bdabb567bda0c2ab0
+  - type: input
+    id: version-jellyfin-unstable
+    attributes:
+      label: "Specify unstable release number"
+      description: Fill in this field in case the option 'unstable' is selected. Provide the unstable release number.
+      placeholder: |
+        2024050906
+  - type: input
+    id: build-jellyfin-version
+    attributes:
+      label: "Specify the build version"
+      description: Please provide the build version that is shown in the Jellyfin dashboard.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: On which platform are you encountering this issue?
+      options:
+        - Xbox
+        - Desktop
+    validations:
+      required: true
+  - type: textarea
+    id: environment-information
+    attributes:
+      label: Environment
+      description: |
+        Accurately fill in as much environment details as possible. If a certain environment field is not shown in the template below, but you consider useful information, please include it.
+        Examples:
+        - **Device**: [XBOX One X, XBOX Series S, PC, etc.]
+        - **OS Version**: 10.0.26100.3363(xb_flt_2502ge.250226-2215) \([how to find out your XBOX OS Version](https://support.xbox.com/en-US/help/hardware-network/settings-updates/whats-new-xbox-one-system-updates)\)
+      value: |
+        - Device:
+        - OS Version:
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Relevant screenshots or videos
+      description: Attach relevant screenshots or videos related to this report.
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Any additional information that might be useful to this issue.
